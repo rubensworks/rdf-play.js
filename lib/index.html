@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css?family=Anton&display=swap" rel="stylesheet">
 </head>
 <body>
+<section class="main-wrapper">
 <section class="main">
     <h1>RDF Play</h1>
     <script src="scripts/main.min.js"></script>
@@ -17,5 +18,33 @@
         <input class="submit" type="submit" value="Get RDF" />
     </form>
 </section>
+</section>
+<footer>
+    <div class="wrapper">
+        <h2 class="footer-heading">RDF Play</h2>
+
+        <p>
+            This is a Web-based tool for performing simple RDF operations.
+            Currently, dereferencing RDF by URL is supported.
+        </p>
+
+        <p>
+            All major RDF serializations are supported, such as Turtle, JSON-LD, RDFa in HTML, script data blocks in HTML, ...
+            <br />
+            Internally, this tool makes use of RDF parsers from the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
+            which enable streaming processing of RDF.
+        </p>
+
+        <p>
+            Want to run this from the command-line? Have a look at <a href="https://github.com/rubensworks/rdf-dereference.js/">rdf-dereference</a>.
+        </p>
+
+        <p>
+            &#169; 2020 - now<br />
+            <a href="https://github.com/rubensworks/rdf-play.js/" class="source">Source code</a>
+        </p>
+
+    </div>
+</footer>
 </body>
 </html>

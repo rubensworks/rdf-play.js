@@ -1,16 +1,39 @@
 html {
     font-size: 11pt;
-    background: #f4e8c1;
+    background: #331e38;
+}
+body {
+    margin: 0;
 }
 html, input, textarea, button, pre {
     font: 1em/1.4 'Open Sans', Verdana, Arial, sans-serif;
     -webkit-text-size-adjust: none;
 }
 
+.main-wrapper {
+    background: #f4e8c1;
+}
+
 .main {
     text-align: center;
     width: 800px;
     margin: auto;
+    min-height: 600px;
+}
+
+footer {
+    background: #331e38;
+    color: #c0c0c0;
+    font-size: 12px;
+    margin: 10px;
+}
+
+footer a {
+    color: #c0c0c0;
+}
+
+footer a:hover {
+    color: #ececec;
 }
 
 h1 {
