@@ -2,14 +2,14 @@ import {StreamWriter} from "n3";
 import * as RDF from "rdf-js";
 import {stringQuadToQuad} from "rdf-string";
 
-function invoke(url: string, onQuad: (quad: RDF.Quad) => void, onError: (error: Error) => void,
+function invoke(url: string, onQuad: (quad: RDF.Quad) => void, onError: (error: string) => void,
                 onCounterUpdate: (counter: number, done: boolean) => void): Worker {
   const worker = new Worker('scripts/worker.min.js');
   worker.onmessage = (message) => {
     const data = message.data;
     switch (data.type) {
     case 'quad':    return onQuad(stringQuadToQuad(data.quad));
-    case 'error':   return onError(data.error);
+    case 'err':   return onError(data.error);
     case 'counter': return onCounterUpdate(data.counter, data.done);
     }
   };
@@ -101,8 +101,13 @@ function init() {
     const form = forms.item(i);
 
     form.addEventListener('submit', (event) => {
-      const counterElement = document.querySelector('.output-counter');
-      const errorElement = document.querySelector('.output-error');
+      const outputElement: HTMLElement = document.querySelector('.output');
+      const counterElement: HTMLElement = document.querySelector('.output-counter');
+      const errorElement: HTMLElement = document.querySelector('.output-error');
+
+      // Hide error
+      errorElement.style.display = 'none';
+      outputElement.style.display = 'block';
 
       // Kill any old worker
       if (lastWorker) {
@@ -113,7 +118,8 @@ function init() {
       lastWorker = invoke((<any> form.querySelector('.field-url')).value,
         createTrigPrinter(),
         (error) => {
-          errorElement.innerHTML = error.message;
+          errorElement.style.display = 'block';
+          errorElement.innerHTML = error;
         },
         (counter: number, done: boolean) => {
           counterElement.innerHTML = `${counter}${done ? '' : '...'}`;

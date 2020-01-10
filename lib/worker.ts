@@ -5,8 +5,9 @@ import {quadToStringQuad} from "rdf-string";
 self.onmessage = (m: any) => {
   invoke(m.data.url,
     (quad: RDF.Quad) => postMessage({ type: 'quad', quad: quadToStringQuad(quad) }, null, null),
-    (error: Error) => postMessage({ type: 'error', error}, null, null),
-    (counter: number, done: boolean) => postMessage({ type: 'counter', counter, done }, null, null));
+    (error: Error) => postMessage({ type: 'err', error: error.message }, null, null),
+    (counter: number, done: boolean) => postMessage({ type: 'counter', counter, done }, null, null)
+  );
 };
 
 async function invoke(url: string, onQuad: (quad: RDF.Quad) => void, onError: (error: Error) => void,

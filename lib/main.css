@@ -75,7 +75,7 @@ input.submit:hover {
     background-color: #618a97;
 }
 input.submit:active {
-    margin: 1px -1px -1px 1px;
+    margin: 11px -1px -1px 1px;
 }
 
 .output {
