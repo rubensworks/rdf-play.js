@@ -1,0 +1,19 @@
+html {
+    font-size: 11pt;
+    background: #f4e8c1;
+}
+html, input, textarea, button, pre {
+    font: 1em/1.4 'Open Sans', Verdana, Arial, sans-serif;
+    -webkit-text-size-adjust: none;
+}
+
+#main {
+    text-align: center;
+}
+
+h1 {
+    font-size: 75px;
+    color: #331e38;
+    font-family: 'Anton', sans-serif;
+    font-weight: bolder;
+}
