@@ -6,7 +6,7 @@ self.onmessage = (m: any) => {
   invoke(m.data.url,
     (quad: RDF.Quad) => postMessage({ type: 'quad', quad: quadToStringQuad(quad) }, null, null),
     (error: Error) => postMessage({ type: 'err', error: error.message }, null, null),
-    (counter: number, done: boolean) => postMessage({ type: 'counter', counter, done }, null, null)
+    (counter: number, done: boolean) => postMessage({ type: 'counter', counter, done }, null, null),
   );
 };
 

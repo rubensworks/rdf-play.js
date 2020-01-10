@@ -73,6 +73,7 @@ function createTrigPrinter(): (quad: RDF.Quad) => void {
   let i = 0;
   let lastElement: HTMLTableDataCellElement = null;
   writer.on('data', (text: string) => {
+    lastRdf += text;
     const lines = text.split(/\n/g);
     let first = true;
     for (const line of lines) {
@@ -93,6 +94,24 @@ function createTrigPrinter(): (quad: RDF.Quad) => void {
   };
 }
 
+function copyStringToClipboard(str: string) {
+  // Create new element
+  const el: HTMLTextAreaElement = document.createElement('textarea');
+  // Set value (string to be copied)
+  el.value = str;
+  // Set non-editable to avoid focus and move outside of view
+  el.setAttribute('readonly', '');
+  (<any> el).style = { position: 'absolute', left: '-9999px' };
+  document.body.appendChild(el);
+  // Select text inside element
+  el.select();
+  // Copy text to clipboard
+  document.execCommand('copy');
+  // Remove temporary element
+  document.body.removeChild(el);
+}
+
+let lastRdf: string;
 function init() {
   let lastWorker: Worker = null;
 
@@ -101,6 +120,8 @@ function init() {
     const form = forms.item(i);
 
     form.addEventListener('submit', (event) => {
+      lastRdf = '';
+
       const outputElement: HTMLElement = document.querySelector('.output');
       const counterElement: HTMLElement = document.querySelector('.output-counter');
       const errorElement: HTMLElement = document.querySelector('.output-error');
@@ -124,9 +145,17 @@ function init() {
         (counter: number, done: boolean) => {
           counterElement.innerHTML = `${counter}${done ? '' : '...'}`;
         });
+
       event.preventDefault();
       return false;
     }, true);
+
+    // Copy clipboard listener
+    document.querySelector('.clipboard').addEventListener('click', () => {
+      copyStringToClipboard(lastRdf);
+      event.preventDefault();
+      return false;
+    });
   }
 }
 

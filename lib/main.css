@@ -60,22 +60,37 @@ input.field-url {
 }
 
 
-input.submit {
+input.submit, button {
     font-weight: bold;
     color: black;
     background-color: #70a0af;
     border: 1px solid #51737e;
 
-    margin: 10px 0 0;
     padding: 10px 14px;
-    width: 796px;
     cursor: pointer;
 }
-input.submit:hover {
+input.submit {
+    margin: 10px 0 0;
+    width: 796px;
+}
+input.submit:hover,
+button:hover {
     background-color: #618a97;
 }
 input.submit:active {
     margin: 11px -1px -1px 1px;
+}
+button:active {
+    margin: 1px -1px -1px 1px;
+}
+button.clipboard {
+    float: right;
+    padding: 2px 3px;
+    font-size: 12px;
+}
+
+.metadata {
+    margin-bottom: 8px;
 }
 
 .output {
