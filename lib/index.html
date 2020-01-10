@@ -12,11 +12,27 @@
 <section class="main-wrapper">
 <section class="main">
     <h1>RDF Play</h1>
-    <script src="scripts/main.min.js"></script>
-    <form id="query">
+    <form class="query">
         <input class="field-url" type="text" placeholder="https://example.org/" />
         <input class="submit" type="submit" value="Get RDF" />
     </form>
+    <div class="output-error">
+        An error occurred...
+    </div>
+    <div class="output">
+        <strong>Counter</strong>: <span class="output-counter"></span>
+        <table class="serialized">
+
+        </table>
+        <table class="quads" style="display: none">
+            <tr class="head">
+                <td>Subject</td>
+                <td>Predicate</td>
+                <td>Object</td>
+                <td>Graph</td>
+            </tr>
+        </table>
+    </div>
 </section>
 </section>
 <footer>
@@ -25,7 +41,7 @@
 
         <p>
             This is a Web-based tool for performing simple RDF operations.
-            Currently, dereferencing RDF by URL is supported.
+            Currently, dereferencing RDF by URL with TriG output is supported.
         </p>
 
         <p>
@@ -46,5 +62,6 @@
 
     </div>
 </footer>
+<script src="scripts/main.min.js"></script>
 </body>
 </html>

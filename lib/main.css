@@ -19,6 +19,7 @@ html, input, textarea, button, pre {
     width: 800px;
     margin: auto;
     min-height: 600px;
+    padding-bottom: 10px;
 }
 
 footer {
@@ -43,7 +44,7 @@ h1 {
     font-weight: bolder;
 }
 
-form#query {
+form.query {
     width: 800px;
     padding: 10px;
     background: #a0c1b9;
@@ -75,4 +76,60 @@ input.submit:hover {
 }
 input.submit:active {
     margin: 1px -1px -1px 1px;
+}
+
+.output {
+    margin-top: 10px;
+    background: #a0c1b9;
+    width: 800px;
+    padding: 10px;
+    text-align: left;
+}
+
+.output table {
+    border-spacing: 0;
+    border-collapse: separate;
+}
+
+.output table.quads .head {
+    font-weight: bold;
+}
+
+.output table.quads td {
+    padding: 2px;
+    font-size: 10px;
+    width: 195px;
+    max-width: 195px;
+    word-wrap: break-word;
+    overflow: scroll;
+}
+
+.output table.quads .head td {
+    font-size: 14px;
+    border-bottom: 1px solid #331e38;
+}
+
+.output table.serialized {
+    width: 800px;
+    max-height: 400px;
+    overflow: scroll;
+    height: 400px;
+    font-size: 12px;
+    background: white;
+}
+
+.output table.serialized td {
+    width: 798px;
+    max-width: 798px;
+    word-wrap: break-word;
+}
+
+.output-error {
+    margin-top: 10px;
+    width: 798px;
+    padding: 10px;
+    text-align: left;
+    background: #c1454a;
+    color: #ececec;
+    border: solid 1px #842f32;
 }
