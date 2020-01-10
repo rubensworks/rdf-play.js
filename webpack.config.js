@@ -8,6 +8,7 @@ module.exports = [
       './lib/main.ts',
       './lib/index.html',
       './lib/main.css',
+      './lib/settings.svg',
     ],
     devtool: 'inline-source-map',
     output: {

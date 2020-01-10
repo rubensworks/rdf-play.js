@@ -2,7 +2,7 @@ import {StreamWriter} from "n3";
 import * as RDF from "rdf-js";
 import {stringQuadToQuad} from "rdf-string";
 
-function invoke(url: string, onQuad: (quad: RDF.Quad) => void, onError: (error: string) => void,
+function invoke(url: string, proxy: string, onQuad: (quad: RDF.Quad) => void, onError: (error: string) => void,
                 onCounterUpdate: (counter: number, done: boolean) => void): Worker {
   const worker = new Worker('scripts/worker.min.js');
   worker.onmessage = (message) => {
@@ -14,7 +14,7 @@ function invoke(url: string, onQuad: (quad: RDF.Quad) => void, onError: (error: 
     }
   };
   worker.onerror = <any> onError;
-  worker.postMessage({ url });
+  worker.postMessage({ url, proxy });
   return worker;
 }
 
@@ -129,6 +129,8 @@ function init() {
   for (let i = 0; i < forms.length; i++) {
     const form = forms.item(i);
 
+    const httpProxyElement: HTMLInputElement = document.querySelector('.http-proxy');
+
     form.addEventListener('submit', (event) => {
       lastRdf = '';
 
@@ -146,11 +148,16 @@ function init() {
       }
 
       // Add new results
+      const proxy = httpProxyElement.value;
       lastWorker = invoke((<any> form.querySelector('.field-url')).value,
+        proxy,
         createTrigPrinter(),
         (error) => {
           errorElement.style.display = 'block';
           errorElement.innerHTML = error;
+          if (error.indexOf('Error requesting') === 0) {
+            errorElement.innerHTML += `<br /><em>This website may not have CORS enabled, try enabling a proxy in the settings (button next to input field).</em>`;
+          }
         },
         (counter: number, done: boolean) => {
           counterElement.innerHTML = `${counter}${done ? '' : '...'}`;
@@ -167,19 +174,44 @@ function init() {
       return false;
     });
 
+    // Set up details toggling
+    const details: HTMLElement = document.querySelector('.details');
+    document.querySelector('.details-toggle').addEventListener('click', () => {
+      if (details.style.display === 'block') {
+        details.style.display = 'none';
+      } else {
+        details.style.display = 'block';
+      }
+    });
+
+    // Set default proxy
+    document.querySelector('.proxy-default').addEventListener('click', () => {
+      httpProxyElement.value = 'https://proxy.linkeddatafragments.org/';
+      inputChangeListener();
+      event.preventDefault();
+    });
+
     // URL state
-    const field: HTMLInputElement = form.querySelector('.field-url');
+    const fieldUrl: HTMLInputElement = form.querySelector('.field-url');
     if (uiState.url) {
-      field.value = uiState.url;
+      fieldUrl.value = uiState.url;
     }
-    field.addEventListener('input', () => {
+    if (uiState.proxy) {
+      httpProxyElement.value = uiState.proxy;
+    }
+    const inputChangeListener = () => {
       const queryString: string[] = [];
-      if (field.value) {
-        queryString.push('url=' + encodeURIComponent(field.value));
+      if (fieldUrl.value) {
+        queryString.push('url=' + encodeURIComponent(fieldUrl.value));
+      }
+      if (httpProxyElement.value) {
+        queryString.push('proxy=' + encodeURIComponent(httpProxyElement.value));
       }
       history.replaceState(null, null, location.href.replace(/(?:#.*)?$/,
         queryString.length ? '#' + queryString.join('&') : ''));
-    });
+    };
+    fieldUrl.addEventListener('input', inputChangeListener);
+    httpProxyElement.addEventListener('input', inputChangeListener);
   }
 }
 

@@ -14,6 +14,12 @@
     <h1>RDF Play</h1>
     <form class="query">
         <input class="field-url" type="text" placeholder="https://example.org/" />
+        <span class="details-toggle" title="Settings"></span>
+        <div class="details">
+            <strong>HTTP Proxy</strong>:
+            <input class="http-proxy" type="text" placeholder="https://proxy.example.org/" />
+            <button class="proxy-default">Set default</button>
+        </div>
         <input class="submit" type="submit" value="Get RDF" />
     </form>
     <div class="output-error" style="display: none">
@@ -43,7 +49,7 @@
         <h2 class="footer-heading">RDF Play</h2>
 
         <p>
-            This is a Web-based tool for performing simple RDF operations.
+            This is a Web-based tool for performing simple client-side RDF operations.
             Currently, dereferencing RDF by URL with TriG output is supported.
         </p>
 

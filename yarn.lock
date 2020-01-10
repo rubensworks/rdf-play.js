@@ -34,6 +34,11 @@
     isomorphic-fetch "^2.2.1"
     parse-link-header "^1.0.1"
 
+"@comunica/actor-http-proxy@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@comunica/actor-http-proxy/-/actor-http-proxy-1.10.0.tgz#02517e805027fd9516b6d683de25f85544e76561"
+  integrity sha512-8Cd5z/qzBYgtOsMLxPfoKyhSdgvwX9gMh3XPUNvtznQrDIw3p9JMgGhDm72vYFnC/Gfw/o4MI4nmoyxh84lZBw==
+
 "@comunica/actor-rdf-dereference-http-parse@^1.9.3":
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/@comunica/actor-rdf-dereference-http-parse/-/actor-rdf-dereference-http-parse-1.10.0.tgz#8646fc7dac0557041d54979360b3cf307e006b04"
@@ -3614,12 +3619,13 @@ raw-body@2.4.0:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-rdf-dereference@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/rdf-dereference/-/rdf-dereference-1.2.1.tgz#9c191569946d5c8d2635cb99117f795f017bcca9"
-  integrity sha512-RQIrrI/Fef3ty51R854eEY5zFlhKy5TUgXSu6+wlgOTGSTaZ33nht7prXe9SuDsj6Iu/fmDdIyBqJZR4C0t6Hw==
+rdf-dereference@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/rdf-dereference/-/rdf-dereference-1.3.1.tgz#addea8d54c27b422f8aa545fbe0c68ef34f6cbdc"
+  integrity sha512-ECvK+jh86r3sNsvgW9NFTL0DFjR6bKm+aA3BDijJSve9BlTJQFrkr/dh09dT9mwLr41NXbFHTHSAy1dT1kRN3g==
   dependencies:
     "@comunica/actor-http-native" "^1.9.2"
+    "@comunica/actor-http-proxy" "^1.10.0"
     "@comunica/actor-rdf-dereference-http-parse" "^1.9.3"
     "@comunica/actor-rdf-parse-html" "^1.9.2"
     "@comunica/actor-rdf-parse-html-rdfa" "^1.9.2"
