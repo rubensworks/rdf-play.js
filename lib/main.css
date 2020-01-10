@@ -7,8 +7,10 @@ html, input, textarea, button, pre {
     -webkit-text-size-adjust: none;
 }
 
-#main {
+.main {
     text-align: center;
+    width: 800px;
+    margin: auto;
 }
 
 h1 {
@@ -16,4 +18,38 @@ h1 {
     color: #331e38;
     font-family: 'Anton', sans-serif;
     font-weight: bolder;
+}
+
+form#query {
+    width: 800px;
+    padding: 10px;
+    background: #a0c1b9;
+}
+
+input {
+    padding: 1px 5px;
+    font-size: 20pt;
+}
+
+input.field-url {
+    width: 780px;
+}
+
+
+input.submit {
+    font-weight: bold;
+    color: black;
+    background-color: #70a0af;
+    border: 1px solid #51737e;
+
+    margin: 10px 0 0;
+    padding: 10px 14px;
+    width: 796px;
+    cursor: pointer;
+}
+input.submit:hover {
+    background-color: #618a97;
+}
+input.submit:active {
+    margin: 1px -1px -1px 1px;
 }
