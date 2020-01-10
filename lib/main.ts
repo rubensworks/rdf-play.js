@@ -115,6 +115,16 @@ let lastRdf: string;
 function init() {
   let lastWorker: Worker = null;
 
+  // Load URL state
+  const uiState = location.hash.substr(1).split('&').reduce((acc: any, item) => {
+    const keyvalue = item.match(/^([^=]+)=(.*)/);
+    if (keyvalue) {
+      acc[decodeURIComponent(keyvalue[1])] = decodeURIComponent(keyvalue[2]);
+    }
+    return acc;
+  }, {});
+
+  // Init form(s)
   const forms = document.querySelectorAll('.query');
   for (let i = 0; i < forms.length; i++) {
     const form = forms.item(i);
@@ -155,6 +165,20 @@ function init() {
       copyStringToClipboard(lastRdf);
       event.preventDefault();
       return false;
+    });
+
+    // URL state
+    const field: HTMLInputElement = form.querySelector('.field-url');
+    if (uiState.url) {
+      field.value = uiState.url;
+    }
+    field.addEventListener('input', () => {
+      const queryString: string[] = [];
+      if (field.value) {
+        queryString.push('url=' + encodeURIComponent(field.value));
+      }
+      history.replaceState(null, null, location.href.replace(/(?:#.*)?$/,
+        queryString.length ? '#' + queryString.join('&') : ''));
     });
   }
 }
