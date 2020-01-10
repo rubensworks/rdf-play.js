@@ -1,0 +1,181 @@
+html {
+    font-size: 11pt;
+    background: #331e38;
+}
+body {
+    margin: 0;
+}
+html, input, textarea, button, pre {
+    font: 1em/1.4 'Open Sans', Verdana, Arial, sans-serif;
+    -webkit-text-size-adjust: none;
+}
+
+.main-wrapper {
+    background: #f4e8c1;
+}
+
+.main {
+    text-align: center;
+    width: 800px;
+    margin: 10px auto;
+    min-height: 600px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+
+footer {
+    background: #331e38;
+    color: #c0c0c0;
+    font-size: 12px;
+    margin: 10px;
+}
+
+footer a {
+    color: #c0c0c0;
+}
+
+footer a:hover {
+    color: #ececec;
+}
+
+h1 {
+    margin: 10px 0 20px;
+    font-size: 75px;
+    color: #331e38;
+    font-family: 'Anton', sans-serif;
+    font-weight: bolder;
+}
+
+form.query {
+    width: 800px;
+    padding: 10px;
+    background: #a0c1b9;
+}
+
+input {
+    padding: 1px 5px;
+    font-size: 20pt;
+}
+
+input.field-url {
+    width: 750px;
+}
+input.http-proxy {
+    width: 556px;
+    margin: 20px 0 0 5px;
+}
+input.submit, button {
+    font-weight: bold;
+    color: black;
+    background-color: #70a0af;
+    border: 1px solid #51737e;
+
+    padding: 10px 14px;
+    cursor: pointer;
+}
+input.submit {
+    margin: 10px 0 0;
+    width: 796px;
+}
+input.submit:hover,
+button:hover {
+    background-color: #618a97;
+}
+input.submit:active {
+    margin: 11px -1px -1px 1px;
+}
+button:active {
+    margin: 1px -1px -1px 1px;
+}
+button.clipboard {
+    float: right;
+    padding: 2px 3px;
+    font-size: 12px;
+}
+
+.metadata {
+    margin-bottom: 8px;
+}
+
+.output {
+    margin-top: 10px;
+    background: #a0c1b9;
+    width: 800px;
+    padding: 10px;
+    text-align: left;
+}
+
+.output table {
+    border-spacing: 0;
+    border-collapse: separate;
+}
+
+.output table.quads .head {
+    font-weight: bold;
+}
+
+.output table.quads td {
+    padding: 2px;
+    font-size: 10px;
+    width: 195px;
+    max-width: 195px;
+    word-wrap: break-word;
+    overflow: scroll;
+}
+
+.output table.quads .head td {
+    font-size: 14px;
+    border-bottom: 1px solid #331e38;
+}
+
+.output table.serialized {
+    width: 800px;
+    max-height: 400px;
+    overflow: scroll;
+    height: 400px;
+    font-size: 12px;
+    background: white;
+}
+
+.output table.serialized td {
+    width: 798px;
+    max-width: 798px;
+    word-wrap: break-word;
+}
+
+.output-error {
+    margin-top: 10px;
+    width: 798px;
+    padding: 10px;
+    text-align: left;
+    background: #c1454a;
+    color: #ececec;
+    border: solid 1px #842f32;
+}
+
+.details {
+    display: none;
+    text-align: left;
+}
+.details-toggle {
+    display: block;
+    width:  24px;
+    height: 24px;
+    margin-top: 10px;
+    float: right;
+    cursor: pointer;
+    background: url(../images/settings.svg) no-repeat center center / contain;
+    opacity: .8;
+}
+.details-toggle:hover, .details-toggle.enabled {
+    opacity: 1;
+}
+.details-toggle.enabled {
+    background-image: url(../images/settings.svg#active);
+    width: 25px; /* for Chrome */
+}
+button.proxy-default {
+    position: relative;
+    top: -4px;
+}
+

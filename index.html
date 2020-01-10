@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RDF Play</title>
+    <link rel=stylesheet href="styles/main.css">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+    <link rel=stylesheet href="http://fonts.googleapis.com/css?family=Open+Sans:300,400italic,700italic,400,700">
+    <link href="https://fonts.googleapis.com/css?family=Anton&display=swap" rel="stylesheet">
+</head>
+<body>
+<section class="main-wrapper">
+<section class="main">
+    <h1>RDF Play</h1>
+    <form class="query">
+        <input class="field-url" type="text" placeholder="https://example.org/" />
+        <span class="details-toggle" title="Settings"></span>
+        <div class="details">
+            <strong>HTTP Proxy</strong>:
+            <input class="http-proxy" type="text" placeholder="https://proxy.example.org/" />
+            <button class="proxy-default">Set default</button>
+        </div>
+        <input class="submit" type="submit" value="Get RDF" />
+    </form>
+    <div class="output-error" style="display: none">
+        An error occurred...
+    </div>
+    <div class="output" style="display: none">
+        <div class="metadata">
+            <strong>RDF Quads</strong>: <span class="output-counter"></span>
+            <button class="clipboard">Copy to Clipboard</button>
+        </div>
+        <table class="serialized">
+
+        </table>
+        <table class="quads" style="display: none">
+            <tr class="head">
+                <td>Subject</td>
+                <td>Predicate</td>
+                <td>Object</td>
+                <td>Graph</td>
+            </tr>
+        </table>
+    </div>
+</section>
+</section>
+<footer>
+    <div class="wrapper">
+        <h2 class="footer-heading">RDF Play</h2>
+
+        <p>
+            This is a Web-based tool for performing simple client-side RDF operations.
+            Currently, dereferencing RDF by URL with TriG output is supported.
+        </p>
+
+        <p>
+            All major RDF serializations are supported, such as Turtle, JSON-LD, RDFa in HTML, script data blocks in HTML, ...
+            <br />
+            Internally, this tool makes use of RDF parsers from the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
+            which enable streaming processing of RDF.
+        </p>
+
+        <p>
+            Want to run this from the command-line? Have a look at <a href="https://github.com/rubensworks/rdf-dereference.js/">rdf-dereference</a>.
+        </p>
+
+        <p>
+            &#169; 2020 - now<br />
+            <a href="https://github.com/rubensworks/rdf-play.js/" class="source">Source code</a><br />
+            <a href="https://github.com/rubensworks/rdf-play.js/issues/">Found a bug or need a feature? Report it at the issue tracker</a>.
+        </p>
+
+    </div>
+</footer>
+<script src="scripts/main.min.js"></script>
+</body>
+</html>
