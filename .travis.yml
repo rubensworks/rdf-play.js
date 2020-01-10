@@ -1,3 +1,4 @@
+dist: trusty
 language: node_js
 node_js:
  - "10"
@@ -7,5 +8,17 @@ script:
   - npm run lint
   - npm run production
 cache:
+  yarn: true
   directories:
     - node_modules
+before_deploy:
+  - rm .gitignore
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  keep_history: true
+  local_dir: build
+  on:
+    branch: master
+    node_js: "node"
