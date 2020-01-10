@@ -22,11 +22,10 @@
   "homepage": "https://github.com/rubensworks/rdf-play.js#readme",
   "license": "MIT",
   "files": [
-    "lib/**/*.d.ts",
-    "lib/**/*.js",
-    "index.d.ts",
-    "index.js",
-    "index.html"
+    "lib/**/*.ts",
+    "lib/**/*.css",
+    "lib/**/*.html",
+    "lib/**/*.svg"
   ],
   "pre-commit": [
     "lint"
