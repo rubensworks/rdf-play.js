@@ -1,25 +1,21 @@
 import {StreamWriter} from "n3";
-import rdfDereferencer from "rdf-dereference";
 import * as RDF from "rdf-js";
+import {stringQuadToQuad} from "rdf-string";
 
-async function invoke(url: string, onQuad: (quad: RDF.Quad) => void, onError: (error: Error) => void,
-                      onCounterUpdate: (counter: number, done: boolean) => void) {
-  // http://dbpedia.org/page/12_Monkeys
-  try {
-    const { quads } = await rdfDereferencer.dereference(url);
-    let counter = 0;
-    onCounterUpdate(counter, false);
-    quads.on('data', (quad: RDF.Quad) => {
-      onCounterUpdate(++counter, false);
-      onQuad(quad);
-    })
-      .on('error', onError)
-      .on('end', () => {
-        onCounterUpdate(counter, true);
-      });
-  } catch (e) {
-    onError(e);
-  }
+function invoke(url: string, onQuad: (quad: RDF.Quad) => void, onError: (error: Error) => void,
+                onCounterUpdate: (counter: number, done: boolean) => void): Worker {
+  const worker = new Worker('scripts/worker.min.js');
+  worker.onmessage = (message) => {
+    const data = message.data;
+    switch (data.type) {
+    case 'quad':    return onQuad(stringQuadToQuad(data.quad));
+    case 'error':   return onError(data.error);
+    case 'counter': return onCounterUpdate(data.counter, data.done);
+    }
+  };
+  worker.onerror = <any> onError;
+  worker.postMessage({ url });
+  return worker;
 }
 
 function termToHtml(term: RDF.Term): string {
@@ -98,6 +94,8 @@ function createTrigPrinter(): (quad: RDF.Quad) => void {
 }
 
 function init() {
+  let lastWorker: Worker = null;
+
   const forms = document.querySelectorAll('.query');
   for (let i = 0; i < forms.length; i++) {
     const form = forms.item(i);
@@ -106,8 +104,13 @@ function init() {
       const counterElement = document.querySelector('.output-counter');
       const errorElement = document.querySelector('.output-error');
 
+      // Kill any old worker
+      if (lastWorker) {
+        lastWorker.terminate();
+      }
+
       // Add new results
-      invoke((<any> form.querySelector('.field-url')).value,
+      lastWorker = invoke((<any> form.querySelector('.field-url')).value,
         createTrigPrinter(),
         (error) => {
           errorElement.innerHTML = error.message;

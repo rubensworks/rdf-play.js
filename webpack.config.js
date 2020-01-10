@@ -9,7 +9,7 @@ module.exports = [
       './lib/index.html',
       './lib/main.css',
     ],
-	devtool: 'inline-source-map',
+    devtool: 'inline-source-map',
     output: {
       filename: 'scripts/main.min.js',
       path: path.join(__dirname, '/build'),
@@ -48,12 +48,41 @@ module.exports = [
 
       ],
     },
-	//resolve: {
-	//  extensions: [ '.tsx', '.ts', '.js' ],
-	//},
-  //  optimization: {
-  //    minimize: true,
-  //  },
+    resolve: {
+      extensions: [ '.tsx', '.ts', '.js' ],
+    },
+    optimization: {
+      minimize: true,
+    },
+    plugins: [
+      new StringReplacePlugin(),
+    ],
+  },
+  {
+    entry: [
+      './lib/worker.ts',
+    ],
+    devtool: 'inline-source-map',
+    output: {
+      filename: 'scripts/worker.min.js',
+      path: path.join(__dirname, '/build'),
+      libraryTarget: 'this', // Fixes hot loading of web worker not working in Webpack
+    },
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+        },
+      ],
+    },
+    resolve: {
+      extensions: [ '.tsx', '.ts', '.js' ],
+    },
+    optimization: {
+      minimize: true,
+    },
     plugins: [
       new StringReplacePlugin(),
     ],
