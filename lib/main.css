@@ -17,8 +17,9 @@ html, input, textarea, button, pre {
 .main {
     text-align: center;
     width: 800px;
-    margin: auto;
+    margin: 10px auto;
     min-height: 600px;
+    padding-top: 5px;
     padding-bottom: 10px;
 }
 
@@ -38,6 +39,7 @@ footer a:hover {
 }
 
 h1 {
+    margin: 10px 0 20px;
     font-size: 75px;
     color: #331e38;
     font-family: 'Anton', sans-serif;
