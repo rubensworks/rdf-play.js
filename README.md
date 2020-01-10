@@ -1,6 +1,6 @@
 # RDF Play
 
-[![Build Status](https://travis-ci.org/rubensworks/rdf-play.js.svg?branch=master)](https://travis-ci.org/rubensworks/rdf-play.js)
+[![Build Status](https://travis-ci.org/rubensworks/rdf-play.js.svg?branch=master)](https://travis-ci.org/rubensworks/rdf-play.js) [![Greenkeeper badge](https://badges.greenkeeper.io/rubensworks/rdf-play.js.svg)](https://greenkeeper.io/)
 
 This is a Web-based tool for performing simple RDF operations,
 such as parsing, serializing and dereferencing from URLs.
