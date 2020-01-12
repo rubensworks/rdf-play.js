@@ -13,7 +13,7 @@ function invoke(url: string, proxy: string, onQuad: (quad: RDF.Quad) => void, on
     case 'counter': return onCounterUpdate(data.counter, data.done);
     }
   };
-  worker.onerror = <any> onError;
+  worker.onerror = (error: ErrorEvent) => onError(error.message);
   worker.postMessage({ url, proxy });
   return worker;
 }
