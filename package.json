@@ -31,7 +31,7 @@
     "lint"
   ],
   "devDependencies": {
-    "file-loader": "^5.0.2",
+    "file-loader": "^6.0.0",
     "manual-git-changelog": "^1.0.1",
     "pre-commit": "^1.2.2",
     "string-replace-webpack-plugin": "^0.1.3",
