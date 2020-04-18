@@ -110,6 +110,10 @@ button.clipboard {
     border-collapse: separate;
 }
 
+.output table tr.row-result {
+    height: 12px;
+}
+
 .output table.quads .head {
     font-weight: bold;
 }
