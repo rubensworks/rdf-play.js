@@ -1,6 +1,8 @@
 import {StreamWriter} from "n3";
 import * as RDF from "rdf-js";
 import {stringQuadToQuad} from "rdf-string";
+const Prism = require('./prism.js');
+Prism.manual = true;
 
 function invoke(url: string, proxy: string, onQuad: (quad: RDF.Quad) => void, onError: (error: string) => void,
                 onCounterUpdate: (counter: number, done: boolean) => void): Worker {
@@ -71,7 +73,7 @@ function createTrigPrinter(): (quad: RDF.Quad) => void {
 
   const writer = new StreamWriter({ format: 'trig' });
   let i = 0;
-  let lastElement: HTMLTableDataCellElement = null;
+  let lastElement: HTMLElement= null;
   writer.on('data', (text: string) => {
     lastRdf += text;
     const lines = text.split(/\n/g);
@@ -81,10 +83,13 @@ function createTrigPrinter(): (quad: RDF.Quad) => void {
       if (!element || !first) {
         const row = container.insertRow(i++);
         row.classList.add('row-result');
-        element = row.insertCell(0);
+        const cell = row.insertCell(0);
+        element = cell.appendChild(document.createElement('code'));
+        element.classList.add('language-turtle');
       }
       first = false;
       element.innerHTML += escapeHtml(line);
+      Prism.highlightElement(element);
       lastElement = element;
     }
   });

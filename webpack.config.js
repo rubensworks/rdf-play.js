@@ -8,6 +8,8 @@ module.exports = [
       './lib/main.ts',
       './lib/index.html',
       './lib/main.css',
+      './lib/prism.css',
+      './lib/prism.js',
       './lib/settings.svg',
     ],
     devtool: 'cheap-module-source-map',
