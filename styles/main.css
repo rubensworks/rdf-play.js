@@ -143,7 +143,7 @@ button.clipboard {
 
 .output table.serialized td {
     width: 798px;
-    max-width: 798px;
+    max-width: 1px;
     word-wrap: break-word;
 }
 
@@ -181,5 +181,47 @@ button.clipboard {
 button.proxy-default {
     position: relative;
     top: -4px;
+}
+
+@media (max-width: 800px) {
+    .main {
+        width: 100%;
+    }
+
+    form.query {
+        width: 100%;
+        padding: 10px 0 10px 0;
+    }
+    input.field-url {
+        width: 90%;
+        padding: 0;
+    }
+    input.http-proxy {
+        width: 100%;
+    }
+    input.submit {
+        margin: 10px 0 0;
+        width: 100%;
+    }
+    button.proxy-default {
+        top: 0px;
+    }
+
+    .output {
+        width: 100%;
+        padding: 10px 0 10px 0;
+    }
+    .output table.serialized {
+        width: 100%;
+    }
+    .output table.serialized td {
+        width: 95%;
+        max-width: 1px;
+        word-wrap: break-word;
+    }
+    .output-error {
+        width: 100%;
+        padding: 10px 0 10px 0;
+    }
 }
 
