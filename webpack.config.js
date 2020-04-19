@@ -1,6 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
-var StringReplacePlugin = require('string-replace-webpack-plugin');
+var TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = [
   {
@@ -10,7 +10,7 @@ module.exports = [
       './lib/main.css',
       './lib/settings.svg',
     ],
-    devtool: 'inline-source-map',
+    devtool: 'cheap-module-source-map',
     output: {
       filename: 'scripts/main.min.js',
       path: path.join(__dirname, '/build'),
@@ -52,18 +52,12 @@ module.exports = [
     resolve: {
       extensions: [ '.tsx', '.ts', '.js' ],
     },
-    optimization: {
-      minimize: true,
-    },
-    plugins: [
-      new StringReplacePlugin(),
-    ],
   },
   {
     entry: [
       './lib/worker.ts',
     ],
-    devtool: 'inline-source-map',
+    devtool: 'cheap-module-source-map',
     output: {
       filename: 'scripts/worker.min.js',
       path: path.join(__dirname, '/build'),
@@ -82,10 +76,16 @@ module.exports = [
       extensions: [ '.tsx', '.ts', '.js' ],
     },
     optimization: {
-      minimize: true,
-    },
-    plugins: [
-      new StringReplacePlugin(),
-    ],
+      minimizer: [
+        new TerserPlugin({
+          cache: false,
+          parallel: true,
+          sourceMap: true,
+          terserOptions: {
+            safari10: true,
+          }
+        }),
+      ],
+    }
   },
 ];

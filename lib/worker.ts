@@ -9,9 +9,9 @@ self.onmessage = (m: any) => {
     config['@comunica/actor-http-proxy:httpProxyHandler'] = new (<any> ActorHttpProxy).ProxyHandlerStatic(m.data.proxy);
   }
   invoke(m.data.url, config,
-    (quad: RDF.Quad) => postMessage({ type: 'quad', quad: quadToStringQuad(quad) }, null, null),
-    (error: Error) => postMessage({ type: 'err', error: error.message }, null, null),
-    (counter: number, done: boolean) => postMessage({ type: 'counter', counter, done }, null, null),
+    (quad: RDF.Quad) => postMessage({ type: 'quad', quad: quadToStringQuad(quad) }, undefined),
+    (error: Error) => postMessage({ type: 'err', error: error.message }, undefined),
+    (counter: number, done: boolean) => postMessage({ type: 'counter', counter, done }, undefined),
   );
 };
 
