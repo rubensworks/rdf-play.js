@@ -1,16 +1,8 @@
 dist: trusty
-language: node_js
-node_js:
- - "10"
- - "12"
- - "node"
+import: rubensworks/travis-presets:node-base.yml@master
 script:
   - npm run lint
   - npm run production
-cache:
-  yarn: true
-  directories:
-    - node_modules
 before_deploy:
   - rm .gitignore
 deploy:
@@ -21,4 +13,4 @@ deploy:
   local_dir: build
   on:
     branch: master
-    node_js: "node"
+    condition: $NODE_MAIN = true
