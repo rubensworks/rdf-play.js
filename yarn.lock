@@ -56,6 +56,13 @@
     cross-fetch "^3.0.5"
     relative-to-absolute-iri "^1.0.5"
 
+"@comunica/actor-rdf-parse-html-microdata@~1.19.0":
+  version "1.19.2"
+  resolved "https://registry.yarnpkg.com/@comunica/actor-rdf-parse-html-microdata/-/actor-rdf-parse-html-microdata-1.19.2.tgz#be915e901a7879e43f758649fa3f8a6dc056a9db"
+  integrity sha512-i+FfdPRsd1wT5yrnFORo1eFbL2G+YyeG3dQtC7bEuTf3pW9wXJCUWarLZ0dBbCK3WaPR+J+zdM+fss4j++0bNA==
+  dependencies:
+    microdata-rdf-streaming-parser "^1.1.0"
+
 "@comunica/actor-rdf-parse-html-rdfa@~1.19.0":
   version "1.19.2"
   resolved "https://registry.yarnpkg.com/@comunica/actor-rdf-parse-html-rdfa/-/actor-rdf-parse-html-rdfa-1.19.2.tgz#f4f1aee3c7992429afe98f2fd94f08187697b01c"
@@ -2990,6 +2997,16 @@ methods@~1.1.2:
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
 
+microdata-rdf-streaming-parser@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/microdata-rdf-streaming-parser/-/microdata-rdf-streaming-parser-1.1.0.tgz#1807cfc9b44e739defac7be879f89545cb4dfe59"
+  integrity sha512-nvPEFzG4vZWzWJP2x8Ax7mJmdrFkSYrfhdTUDHLtXYZJVl8Ip7ScHUPLkUfX+Ci4g7sOdgHsotkxuccnlxtCAg==
+  dependencies:
+    "@types/rdf-js" "^4.0.0"
+    htmlparser2 "^5.0.0"
+    rdf-data-factory "^1.0.2"
+    relative-to-absolute-iri "^1.0.2"
+
 micromatch@^3.1.10, micromatch@^3.1.4:
   version "3.1.10"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-3.1.10.tgz#70859bc95c9840952f359a068a3fc49f9ecfac23"
@@ -3839,16 +3856,17 @@ rdf-data-factory@^1.0.4:
   dependencies:
     "@types/rdf-js" "^4.0.0"
 
-rdf-dereference@1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/rdf-dereference/-/rdf-dereference-1.7.0.tgz#1e33171900eef4da3fab5e1405fe99740a8c05c4"
-  integrity sha512-aPYj8ZVhxUt553FBpyDWwNRtv75mOyABGXWJMGTU3yBEoowg7xoQlbDS9UptlSBvh/tUBJ4lTzS9GPT0x4/FBg==
+rdf-dereference@1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/rdf-dereference/-/rdf-dereference-1.8.0.tgz#ff0f0e08b1e4fdd03ab64ee45638f987a9bb3718"
+  integrity sha512-xQbYAx+sC9nWiJEwxf/5Lj9+euJRniUmpDQA54ttGGJURXLSgJ3dUSHm+Zbe0oFgvJ3+OyHhqklkdUbSOF0vEg==
   dependencies:
     "@comunica/actor-http-native" "~1.19.0"
     "@comunica/actor-http-proxy" "~1.19.0"
     "@comunica/actor-rdf-dereference-file" "~1.19.0"
     "@comunica/actor-rdf-dereference-http-parse" "~1.19.0"
     "@comunica/actor-rdf-parse-html" "~1.19.0"
+    "@comunica/actor-rdf-parse-html-microdata" "~1.19.0"
     "@comunica/actor-rdf-parse-html-rdfa" "~1.19.0"
     "@comunica/actor-rdf-parse-html-script" "~1.19.0"
     "@comunica/actor-rdf-parse-jsonld" "~1.19.0"
