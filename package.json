@@ -67,10 +67,10 @@
     "test-watch": "jest ${1} --watch",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "lint": "tslint index.ts lib/**/*.ts test/**/*.ts --exclude '**/*.d.ts'",
-    "build": "webpack-dev-server --config webpack.config.js --mode development",
+    "build": "webpack serve --config webpack.config.js --mode development",
     "validate": "npm ls",
     "version": "manual-git-changelog onversion",
-    "start": "webpack-dev-server --config webpack.config.js --mode production",
+    "start": "webpack serve --config webpack.config.js --mode production",
     "production": "webpack --config webpack.config.js --mode production"
   },
   "dependencies": {

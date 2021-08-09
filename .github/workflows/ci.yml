@@ -1,0 +1,38 @@
+name: CI
+on: [push, pull_request]
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-lint-modules-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - run: yarn install
+      - run: yarn run lint
+
+  deploy:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-lint-modules-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - run: yarn install
+      - run: yarn run production
+      - uses: JamesIves/github-pages-deploy-action@3.6.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: build
+          CLEAN: true

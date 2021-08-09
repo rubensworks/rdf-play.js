@@ -1,6 +1,6 @@
 # RDF Play
 
-[![Build Status](https://travis-ci.org/rubensworks/rdf-play.js.svg?branch=master)](https://travis-ci.org/rubensworks/rdf-play.js)
+[![Build status](https://github.com/rubensworks/rdf-play.js/workflows/CI/badge.svg)](https://github.com/rubensworks/rdf-play.js/actions?query=workflow%3ACI)
 
 This is a Web-based tool for performing simple RDF operations,
 such as parsing, serializing and dereferencing from URLs.
