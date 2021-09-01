@@ -1,6 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "moduleResolution": "node",
     "module": "es6",
     "lib": [
       "es6",

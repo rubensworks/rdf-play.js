@@ -1,6 +1,6 @@
 import * as ActorHttpProxy from "@comunica/actor-http-proxy";
 import rdfDereferencer from "rdf-dereference";
-import * as RDF from "rdf-js";
+import * as RDF from "@rdfjs/types";
 import {quadToStringQuad} from "rdf-string";
 
 self.onmessage = (m: any) => {

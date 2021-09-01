@@ -1,5 +1,5 @@
 import {StreamWriter} from "n3";
-import * as RDF from "rdf-js";
+import * as RDF from "@rdfjs/types";
 import {stringQuadToQuad} from "rdf-string";
 
 function invoke(url: string, proxy: string, onQuad: (quad: RDF.Quad) => void, onError: (error: string) => void,
