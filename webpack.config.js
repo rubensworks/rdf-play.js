@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var TerserPlugin = require('terser-webpack-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = [
   {
@@ -52,6 +53,9 @@ module.exports = [
     resolve: {
       extensions: [ '.tsx', '.ts', '.js' ],
     },
+    plugins: [
+      new NodePolyfillPlugin({ excludeAliases: ['console'] }), // Fix for circular dependency: https://github.com/Richienb/node-polyfill-webpack-plugin/issues/18
+    ],
   },
   {
     entry: [
@@ -75,12 +79,14 @@ module.exports = [
     resolve: {
       extensions: [ '.tsx', '.ts', '.js' ],
     },
+    plugins: [
+      new webpack.ProgressPlugin(),
+      new NodePolyfillPlugin({ excludeAliases: ['console'] }), // Fix for circular dependency: https://github.com/Richienb/node-polyfill-webpack-plugin/issues/18
+    ],
     optimization: {
       minimizer: [
         new TerserPlugin({
-          cache: false,
           parallel: true,
-          sourceMap: true,
           terserOptions: {
             safari10: true,
           }

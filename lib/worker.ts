@@ -18,10 +18,10 @@ self.onmessage = (m: any) => {
 async function invoke(url: string, config: any, onQuad: (quad: RDF.Quad) => void, onError: (error: Error) => void,
                       onCounterUpdate: (counter: number, done: boolean) => void) {
   try {
-    const { quads } = await rdfDereferencer.dereference(url, config);
+    const { data } = await rdfDereferencer.dereference(url, config);
     let counter = 0;
     onCounterUpdate(counter, false);
-    quads.on('data', (quad: RDF.Quad) => {
+    data.on('data', (quad: RDF.Quad) => {
       onCounterUpdate(++counter, false);
       onQuad(quad);
     })

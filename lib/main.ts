@@ -155,7 +155,7 @@ function init() {
         (error) => {
           errorElement.style.display = 'block';
           errorElement.innerHTML = error;
-          if (error.indexOf('Error requesting') === 0) {
+          if (error.indexOf('Error requesting') === 0 || error.indexOf('NetworkError when attempting to fetch resource') === 0) {
             errorElement.innerHTML += `<br /><em>This website may not have CORS enabled, try enabling a proxy in the settings (button next to input field).</em>`;
           }
         },

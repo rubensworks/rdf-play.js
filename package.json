@@ -31,16 +31,17 @@
     "lint"
   ],
   "devDependencies": {
-    "file-loader": "^6.0.0",
+    "file-loader": "^6.2.0",
     "manual-git-changelog": "^1.0.1",
+    "node-polyfill-webpack-plugin": "^1.1.4",
     "pre-commit": "^1.2.2",
-    "ts-loader": "^8.0.0",
+    "ts-loader": "^9.3.0",
     "tslint": "^6.0.0",
     "tslint-eslint-rules": "^5.3.1",
-    "typescript": "^4.0.0",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^4.0.0",
-    "webpack-dev-server": "^3.11.0"
+    "typescript": "^4.6.4",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.8.1"
   },
   "jest": {
     "globals": {
@@ -74,10 +75,10 @@
     "production": "webpack --config webpack.config.js --mode production"
   },
   "dependencies": {
-    "@comunica/actor-http-proxy": "^1.22.0",
-    "@rdfjs/types": "^1.0.1",
-    "n3": "^1.11.1",
-    "rdf-dereference": "1.9.0",
+    "@comunica/actor-http-proxy": "^2.2.0",
+    "@rdfjs/types": "*",
+    "n3": "^1.16.1",
+    "rdf-dereference": "^2.0.0",
     "rdf-string": "^1.6.0"
   }
 }
