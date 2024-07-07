@@ -78,7 +78,7 @@
     "@comunica/actor-http-proxy": "^2.2.0",
     "@rdfjs/types": "*",
     "n3": "^1.16.1",
-    "rdf-dereference": "^2.0.0",
+    "rdf-dereference": "^3.0.0",
     "rdf-string": "^1.6.0"
   }
 }
