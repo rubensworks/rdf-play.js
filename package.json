@@ -79,7 +79,7 @@
     "production": "webpack --config webpack.config.js --mode production"
   },
   "dependencies": {
-    "@comunica/actor-http-proxy": "^2.2.0",
+    "@comunica/actor-http-proxy": "^4.0.0",
     "@rdfjs/types": "*",
     "n3": "^1.16.1",
     "rdf-dereference": "^2.0.0",
