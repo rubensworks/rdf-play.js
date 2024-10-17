@@ -54,7 +54,7 @@ module.exports = [
       extensions: [ '.tsx', '.ts', '.js' ],
     },
     plugins: [
-      new NodePolyfillPlugin({ excludeAliases: ['console'] }), // Fix for circular dependency: https://github.com/Richienb/node-polyfill-webpack-plugin/issues/18
+      new NodePolyfillPlugin()
     ],
   },
   {

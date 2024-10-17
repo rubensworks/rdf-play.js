@@ -1,5 +1,5 @@
 import * as ActorHttpProxy from "@comunica/actor-http-proxy";
-import rdfDereferencer from "rdf-dereference";
+import {rdfDereferencer} from "rdf-dereference";
 import * as RDF from "@rdfjs/types";
 import {quadToStringQuad} from "rdf-string";
 
