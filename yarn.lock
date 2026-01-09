@@ -2831,13 +2831,21 @@ multicast-dns@^7.2.5:
     dns-packet "^5.2.2"
     thunky "^1.0.2"
 
-n3@^1.16.3, n3@^1.17.0, n3@^1.24.2:
+n3@^1.16.3, n3@^1.17.0:
   version "1.24.2"
   resolved "https://registry.yarnpkg.com/n3/-/n3-1.24.2.tgz#c475750ccdac9b55362a1cf5d2461bca971d1cfa"
   integrity sha512-j/3PKmK0MA3tAohDCl9y1JDaNxp8wCnhTtrOOgZ1O17JVtWLkzHsp2jZ8YhY2uS4FWQAm6mExcXvl7C8lwXyaw==
   dependencies:
     buffer "^6.0.3"
     queue-microtask "^1.1.2"
+    readable-stream "^4.0.0"
+
+n3@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/n3/-/n3-2.0.0.tgz#990ff360886a101608145b83efeebe29eed11a80"
+  integrity sha512-U16wgzeUvnP92QSw9q3CWpYcIMB7egm1krI79+a89HoIFf/5Qwvh1RGAV51+W9Dlwr9+1hb60JZlfPfUyzdHtw==
+  dependencies:
+    buffer "^6.0.3"
     readable-stream "^4.0.0"
 
 negotiator@0.6.3:
