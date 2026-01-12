@@ -30,7 +30,7 @@ jobs:
           node-version: 24.x
       - run: yarn install
       - run: yarn run production
-      - uses: JamesIves/github-pages-deploy-action@v4.7.6
+      - uses: JamesIves/github-pages-deploy-action@v4.8.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
