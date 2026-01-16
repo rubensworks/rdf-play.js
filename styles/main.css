@@ -52,7 +52,12 @@ form.query {
     background: #a0c1b9;
 }
 
-input {
+.details-label {
+    display: inline-block;
+    width: 120px;
+}
+
+input, select {
     padding: 1px 5px;
     font-size: 20pt;
 }
@@ -60,8 +65,13 @@ input {
 input.field-url {
     width: 750px;
 }
+select.result-media-type {
+    width: 548px;
+    margin: 20px 0 0 5px;
+    padding: 5px 3px;
+}
 input.http-proxy {
-    width: 556px;
+    width: 533px;
     margin: 20px 0 0 5px;
 }
 input.submit, button {
