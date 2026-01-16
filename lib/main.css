@@ -338,13 +338,14 @@ button.proxy-default {
 /* Convert Tab */
 .convert-wrapper {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     width: 100%;
     margin-bottom: 10px;
 }
 
 .convert-pane {
-    width: 48%;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 .convert-header {
@@ -370,7 +371,6 @@ button.proxy-default {
 }
 
 .convert-submit {
-    width: 100%;
     font-size: 1.5em;
     margin-top: 10px;
 }
