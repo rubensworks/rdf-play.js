@@ -7,11 +7,11 @@ import { quadToStringQuad } from 'rdf-string';
 globalThis.onmessage = async(m: any) => {
   const config: IDereferenceOptions = {};
   if (m.data.proxy) {
-    (<any> config)['@comunica/actor-http-proxy:httpProxyHandler'] =
-        new (<any> ActorHttpProxy).ProxyHandlerStatic(m.data.proxy);
+    (<any>config)['@comunica/actor-http-proxy:httpProxyHandler'] =
+      new (<any>ActorHttpProxy).ProxyHandlerStatic(m.data.proxy);
   }
   await invoke(
-    <string> m.data.url,
+    <string>m.data.url,
     config,
     (quad: RDF.Quad | undefined) => postMessage({ type: 'quad', quad: quad ? quadToStringQuad(quad) : undefined }),
     (error: Error) => postMessage({ type: 'err', error: error.message }),
@@ -35,12 +35,15 @@ async function invoke(
       onQuad(quad);
     })
       .on('error', onError)
+      .on('prefix', (prefix: string, iri: RDF.NamedNode) => {
+        postMessage({ type: 'prefix', prefix, iri: iri.value });
+      })
       .on('end', () => {
         onCounterUpdate(counter, true);
         // eslint-disable-next-line unicorn/no-useless-undefined
         onQuad(undefined);
       });
   } catch (e) {
-    onError(<Error> e);
+    onError(<Error>e);
   }
 }

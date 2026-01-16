@@ -1,4 +1,5 @@
 import type * as RDF from '@rdfjs/types';
+import { rdfParser } from 'rdf-parse';
 import { rdfSerializer } from 'rdf-serialize';
 import type { IStringQuad } from 'rdf-string';
 import { stringQuadToQuad } from 'rdf-string';
@@ -8,6 +9,7 @@ function invoke(
   url: string,
   proxy: string,
   onQuad: (quad: RDF.Quad | undefined) => void,
+  onPrefix: (prefix: string, iri: string) => void,
   onError: (error: string) => void,
   onCounterUpdate: (counter: number, done: boolean) => void,
 ): Worker {
@@ -15,9 +17,10 @@ function invoke(
   worker.onmessage = (message) => {
     const data = message.data;
     switch (data.type) {
-      case 'quad': return onQuad(data.quad ? stringQuadToQuad<RDF.Quad>(<IStringQuad> data.quad) : undefined);
-      case 'err': return onError(<string> data.error);
-      case 'counter': return onCounterUpdate(<number> data.counter, <boolean> data.done);
+      case 'quad': return onQuad(data.quad ? stringQuadToQuad<RDF.Quad>(<IStringQuad>data.quad) : undefined);
+      case 'prefix': return onPrefix(<string>data.prefix, <string>data.iri);
+      case 'err': return onError(<string>data.error);
+      case 'counter': return onCounterUpdate(<number>data.counter, <boolean>data.done);
     }
   };
   worker.onerror = (error: ErrorEvent) => onError(error.message);
@@ -71,7 +74,10 @@ function escapeHtml(unsafe: string): string {
     .replaceAll(' ', '&nbsp;');
 }
 
-function createTrigPrinter(contentType: string): (quad: RDF.Quad | undefined) => void {
+function createTrigPrinter(contentType: string): {
+  onQuad: (quad: RDF.Quad | undefined) => void;
+  onPrefix: (prefix: string, iri: string) => void;
+} {
   const container: HTMLTableElement = document.querySelector('.output table.serialized')!;
 
   // Clear old results
@@ -101,12 +107,17 @@ function createTrigPrinter(contentType: string): (quad: RDF.Quad | undefined) =>
     }
   });
 
-  return (quad: RDF.Quad | undefined) => {
-    if (quad) {
-      readable.push(quad);
-    } else {
-      readable.push(null);
-    }
+  return {
+    onQuad: (quad: RDF.Quad | undefined) => {
+      if (quad) {
+        readable.push(quad);
+      } else {
+        readable.push(null);
+      }
+    },
+    onPrefix: (prefix: string, iri: string) => {
+      readable.emit('prefix', prefix, { termType: 'NamedNode', value: iri });
+    },
   };
 }
 
@@ -117,7 +128,7 @@ function copyStringToClipboard(str: string): void {
   el.value = str;
   // Set non-editable to avoid focus and move outside of view
   el.setAttribute('readonly', '');
-  (<any> el).style = { position: 'absolute', left: '-9999px' };
+  (<any>el).style = { position: 'absolute', left: '-9999px' };
   document.body.appendChild(el);
   // Select text inside element
   el.select();
@@ -142,7 +153,7 @@ function init(): void {
   }, {});
 
   // Init form(s)
-  const forms = document.querySelectorAll('.query');
+  const forms = document.querySelectorAll('form.query');
   for (let i = 0; i < forms.length; i++) {
     const form = forms.item(i);
 
@@ -167,10 +178,12 @@ function init(): void {
 
       // Add new results
       const proxy = httpProxyElement.value;
+      const printer = createTrigPrinter(resultMediaTypeElement.value);
       lastWorker = invoke(
         form.querySelector<HTMLInputElement>('.field-url')!.value,
         proxy,
-        createTrigPrinter(resultMediaTypeElement.value),
+        printer.onQuad,
+        printer.onPrefix,
         (error) => {
           errorElement.style.display = 'block';
           errorElement.innerHTML = error;
@@ -217,6 +230,21 @@ function init(): void {
       return false;
     });
 
+    // Convert from dereference listener
+    document.querySelector('.convert-from-dereference')!.addEventListener('click', () => {
+      // Copy output to Convert tab input
+      convertInput.value = lastRdf;
+      // Set input type to match result format
+      convertInputType.value = resultMediaTypeElement.value;
+      // Switch to Convert tab
+      const convertTab = document.querySelector<HTMLElement>('.tab-btn[data-tab="tab-convert"]');
+      if (convertTab) {
+        convertTab.click();
+      }
+      event!.preventDefault();
+      return false;
+    });
+
     // Set up details toggling
     const details: HTMLElement = document.querySelector('.details')!;
     document.querySelector('.details-toggle')!.addEventListener('click', () => {
@@ -228,27 +256,111 @@ function init(): void {
     });
 
     // Set default proxy
-    document.querySelector('.proxy-default')!.addEventListener('click', () => {
+    document.querySelector('.proxy-default')!.addEventListener('click', (event) => {
       httpProxyElement.value = 'https://proxy.linkeddatafragments.org/';
-      inputChangeListener();
-      event!.preventDefault();
+      updateUrl();
+      event.preventDefault();
     });
 
     // URL state
     const fieldUrl: HTMLInputElement = form.querySelector('.field-url')!;
     if (uiState.url) {
-      (<any> fieldUrl).value = uiState.url;
+      (<any>fieldUrl).value = uiState.url;
     }
     if (uiState.resultMediaType) {
-      (<any> resultMediaTypeElement).value = uiState.resultMediaType;
+      (<any>resultMediaTypeElement).value = uiState.resultMediaType;
     }
     if (uiState.proxy) {
-      (<any> httpProxyElement).value = uiState.proxy;
+      (<any>httpProxyElement).value = uiState.proxy;
     }
-    const inputChangeListener = (): void => {
+
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => {
+        for (const t of tabs) {
+          t.classList.remove('active');
+        }
+        for (const c of tabContents) {
+          c.classList.remove('active');
+        }
+        tab.classList.add('active');
+        const target = tab.getAttribute('data-tab');
+        if (target) {
+          document.getElementById(target)?.classList.add('active');
+          updateUrl();
+        }
+      });
+    }
+
+    if (uiState.tab) {
+      const targetTab = document.querySelector(`.tab-btn[data-tab="${uiState.tab}"]`);
+      if (targetTab) {
+        (<HTMLElement>targetTab).click();
+      }
+    }
+
+    // Conversion logic
+    const convertInputType: HTMLSelectElement = document.querySelector('.convert-input-type')!;
+    const convertOutputType: HTMLSelectElement = document.querySelector('.convert-output-type')!;
+    const convertInput: HTMLTextAreaElement = document.querySelector('.convert-input')!;
+    const convertOutput: HTMLTextAreaElement = document.querySelector('.convert-output')!;
+    const convertSubmit: HTMLButtonElement = document.querySelector('.convert-submit')!;
+    const convertError: HTMLElement = document.querySelector('.convert-error')!;
+
+    // Initialize Convert tab from URL
+    if (uiState.convertInput) {
+      convertInput.value = uiState.convertInput;
+    }
+    if (uiState.convertInputType) {
+      convertInputType.value = uiState.convertInputType;
+    }
+    if (uiState.convertOutputType) {
+      convertOutputType.value = uiState.convertOutputType;
+    }
+
+    // Populate content types
+    // eslint-disable-next-line ts/no-floating-promises
+    Promise.all([
+      rdfSerializer.getContentTypesPrioritized(),
+      rdfParser.getContentTypesPrioritized(),
+    ]).then(([ contentTypesOut, contentTypesIn ]: [Record<string, number>, Record<string, number>]) => {
+      // Input types
+      while (convertInputType.options.length > 0) {
+        convertInputType.remove(convertInputType.options.length - 1);
+      }
+      for (const entry of Object.entries(contentTypesIn).sort((e1, e2) => e2[1] - e1[1])) {
+        const opt = document.createElement('option');
+        opt.text = entry[0];
+        opt.value = entry[0];
+        if (entry[0] === (uiState.convertInputType || 'text/turtle')) {
+          opt.selected = true;
+        }
+        convertInputType.add(opt, null);
+      }
+
+      // Output types
+      while (convertOutputType.options.length > 0) {
+        convertOutputType.remove(convertOutputType.options.length - 1);
+      }
+      for (const entry of Object.entries(contentTypesOut).sort((e1, e2) => e2[1] - e1[1])) {
+        const opt = document.createElement('option');
+        opt.text = entry[0];
+        opt.value = entry[0];
+        if (entry[0] === (uiState.convertOutputType || 'application/trig')) {
+          opt.selected = true;
+        }
+        convertOutputType.add(opt, null);
+      }
+    });
+
+    const updateUrl = (): void => {
       const queryString: string[] = [];
-      if (fieldUrl.value) {
-        queryString.push(`url=${encodeURIComponent(fieldUrl.value)}`);
+      // Dereferencer
+      const currentFieldUrl: HTMLInputElement = form.querySelector('.field-url')!;
+      if (currentFieldUrl.value) {
+        queryString.push(`url=${encodeURIComponent(currentFieldUrl.value)}`);
       }
       if (resultMediaTypeElement.value !== 'application/trig') {
         queryString.push(`resultMediaType=${encodeURIComponent(resultMediaTypeElement.value)}`);
@@ -256,11 +368,88 @@ function init(): void {
       if (httpProxyElement.value) {
         queryString.push(`proxy=${encodeURIComponent(httpProxyElement.value)}`);
       }
+      // Converter
+      if (convertInput.value) {
+        queryString.push(`convertInput=${encodeURIComponent(convertInput.value)}`);
+      }
+      if (convertInputType.value !== 'text/turtle') {
+        queryString.push(`convertInputType=${encodeURIComponent(convertInputType.value)}`);
+      }
+      if (convertOutputType.value !== 'application/trig') {
+        queryString.push(`convertOutputType=${encodeURIComponent(convertOutputType.value)}`);
+      }
+      // Tab
+      const activeTab = document.querySelector('.tab-btn.active');
+      if (activeTab && activeTab.getAttribute('data-tab') !== 'tab-dereference') {
+        queryString.push(`tab=${encodeURIComponent(activeTab.getAttribute('data-tab')!)}`);
+      }
       history.replaceState(null, '', location.href.replace(/(?:#.*)?$/u, queryString.length > 0 ? `#${queryString.join('&')}` : ''));
     };
-    fieldUrl.addEventListener('input', inputChangeListener);
-    resultMediaTypeElement.addEventListener('input', inputChangeListener);
-    httpProxyElement.addEventListener('input', inputChangeListener);
+
+    convertSubmit.addEventListener('click', () => {
+      convertError.style.display = 'none';
+      convertOutput.value = '';
+      const inputStream = new Readable();
+      inputStream.push(convertInput.value);
+      inputStream.push(null);
+
+      const quadStream = rdfParser.parse(inputStream, { contentType: convertInputType.value });
+      const prefixes: Record<string, string> = {};
+      const quads: RDF.Quad[] = [];
+
+      quadStream.on('prefix', (prefix, iri) => {
+        prefixes[prefix] = iri.value;
+      });
+
+      quadStream.on('data', (quad: RDF.Quad) => {
+        quads.push(quad);
+      });
+
+      quadStream.on('end', () => {
+        // Create new stream from buffered quads
+        const bufferedStream = new Readable({ objectMode: true });
+        bufferedStream._read = () => {};
+
+        const outputStream = rdfSerializer.serialize(bufferedStream, {
+          contentType: convertOutputType.value,
+          prefixes,
+        });
+
+        outputStream.on('data', (chunk) => {
+          convertOutput.value += chunk;
+        });
+        outputStream.on('error', (error: Error) => {
+          convertError.style.display = 'block';
+          convertError.textContent = error.message;
+        });
+
+        // Push all buffered quads
+        for (const quad of quads) {
+          bufferedStream.push(quad);
+        }
+        bufferedStream.push(null);
+      });
+
+      quadStream.on('error', (error: Error) => {
+        convertError.style.display = 'block';
+        convertError.textContent = error.message;
+      });
+    });
+
+    document.querySelector('.convert-clipboard')!.addEventListener('click', () => {
+      copyStringToClipboard(convertOutput.value);
+      event!.preventDefault();
+      return false;
+    });
+
+    convertInput.addEventListener('input', updateUrl);
+    convertInputType.addEventListener('input', updateUrl);
+    convertOutputType.addEventListener('input', updateUrl);
+
+    // Reuse updateUrl for dereference inputs
+    fieldUrl.addEventListener('input', updateUrl);
+    resultMediaTypeElement.addEventListener('input', updateUrl);
+    httpProxyElement.addEventListener('input', updateUrl);
   }
 }
 

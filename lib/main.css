@@ -2,10 +2,20 @@ html {
     font-size: 11pt;
     background: #331e38;
 }
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
 }
-html, input, textarea, button, pre {
+
+html,
+input,
+textarea,
+button,
+pre {
     font: 1em/1.4 'Open Sans', Verdana, Arial, sans-serif;
     -webkit-text-size-adjust: none;
 }
@@ -46,10 +56,17 @@ h1 {
     font-weight: bolder;
 }
 
-form.query {
-    width: 800px;
+.query {
+    width: 100%;
     padding: 10px;
     background: #a0c1b9;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.query>* {
+    /* Default items to block/full width in the flex wrap context unless specified */
 }
 
 .details-label {
@@ -57,24 +74,33 @@ form.query {
     width: 120px;
 }
 
-input, select {
+input,
+select {
     padding: 1px 5px;
     font-size: 20pt;
 }
 
 input.field-url {
-    width: 750px;
+    flex-grow: 1;
+    /* Grow to fill space */
+    width: auto;
+    /* Reset fixed width */
+    margin-right: 5px;
 }
+
 select.result-media-type {
-    width: 548px;
+    width: 60%;
     margin: 20px 0 0 5px;
     padding: 5px 3px;
 }
+
 input.http-proxy {
-    width: 533px;
+    width: 60%;
     margin: 20px 0 0 5px;
 }
-input.submit, button {
+
+input.submit,
+button {
     font-weight: bold;
     color: black;
     background-color: #70a0af;
@@ -83,24 +109,30 @@ input.submit, button {
     padding: 10px 14px;
     cursor: pointer;
 }
+
 input.submit {
     margin: 10px 0 0;
-    width: 796px;
+    width: 100%;
 }
+
 input.submit:hover,
 button:hover {
     background-color: #618a97;
 }
+
 input.submit:active {
     margin: 11px -1px -1px 1px;
 }
+
 button:active {
     margin: 1px -1px -1px 1px;
 }
+
 button.clipboard {
     float: right;
     padding: 2px 3px;
     font-size: 12px;
+    margin-left: 2px;
 }
 
 .metadata {
@@ -110,7 +142,7 @@ button.clipboard {
 .output {
     margin-top: 10px;
     background: #a0c1b9;
-    width: 800px;
+    width: 100%;
     padding: 10px;
     text-align: left;
 }
@@ -143,7 +175,7 @@ button.clipboard {
 }
 
 .output table.serialized {
-    width: 800px;
+    width: 100%;
     max-height: 400px;
     overflow: scroll;
     height: 400px;
@@ -152,14 +184,14 @@ button.clipboard {
 }
 
 .output table.serialized td {
-    width: 798px;
+    width: 100%;
     max-width: 1px;
     word-wrap: break-word;
 }
 
 .output-error {
     margin-top: 10px;
-    width: 798px;
+    width: 100%;
     padding: 10px;
     text-align: left;
     background: #c1454a;
@@ -170,24 +202,33 @@ button.clipboard {
 .details {
     display: none;
     text-align: left;
+    width: 100%;
 }
+
 .details-toggle {
     display: block;
-    width:  24px;
+    width: 24px;
     height: 24px;
-    margin-top: 10px;
+    margin-top: 0;
     float: right;
     cursor: pointer;
     background: url(../images/settings.svg) no-repeat center center / contain;
     opacity: .8;
+    flex-shrink: 0;
+    /* Don't shrink */
 }
-.details-toggle:hover, .details-toggle.enabled {
+
+.details-toggle:hover,
+.details-toggle.enabled {
     opacity: 1;
 }
+
 .details-toggle.enabled {
     background-image: url(../images/settings.svg#active);
-    width: 25px; /* for Chrome */
+    width: 25px;
+    /* for Chrome */
 }
+
 button.proxy-default {
     position: relative;
     top: -4px;
@@ -202,17 +243,21 @@ button.proxy-default {
         width: 100%;
         padding: 10px 0 10px 0;
     }
+
     input.field-url {
         width: 90%;
         padding: 0;
     }
+
     input.http-proxy {
         width: 100%;
     }
+
     input.submit {
         margin: 10px 0 0;
         width: 100%;
     }
+
     button.proxy-default {
         top: 0px;
     }
@@ -221,17 +266,127 @@ button.proxy-default {
         width: 100%;
         padding: 10px 0 10px 0;
     }
+
     .output table.serialized {
         width: 100%;
     }
+
     .output table.serialized td {
         width: 95%;
         max-width: 1px;
         word-wrap: break-word;
     }
+
     .output-error {
         width: 100%;
         padding: 10px 0 10px 0;
     }
 }
 
+
+/* Tabs */
+.tab-nav {
+    margin-bottom: 0;
+    border-bottom: 2px solid #70a0af;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: #331e38;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+    margin-right: 5px;
+}
+
+.tab-btn:hover {
+    background-color: rgba(112, 160, 175, 0.2);
+}
+
+.tab-btn:active {
+    margin: 0 5px 0 0;
+}
+
+.tab-btn.active {
+    background-color: #a0c1b9;
+    color: black;
+    font-weight: bold;
+}
+
+/* Reserve space for bold text to prevent layout shift */
+.tab-btn::after {
+    display: block;
+    content: attr(title);
+    font-weight: bold;
+    height: 1px;
+    color: transparent;
+    overflow: hidden;
+    visibility: hidden;
+    margin-bottom: -1px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Convert Tab */
+.convert-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.convert-pane {
+    width: 48%;
+}
+
+.convert-header {
+    background: #a0c1b9;
+    margin-bottom: 5px;
+}
+
+.convert-input,
+.convert-output {
+    width: 100%;
+    height: 400px;
+    box-sizing: border-box;
+    resize: vertical;
+    padding: 10px;
+    font-family: monospace;
+}
+
+.convert-input-type,
+.convert-output-type {
+    width: 100%;
+    padding: 1px 5px;
+    font-size: 16pt;
+}
+
+.convert-submit {
+    width: 100%;
+    font-size: 1.5em;
+    margin-top: 10px;
+}
+
+.convert-submit:active {
+    margin: 11px -1px -1px 1px;
+}
+
+@media (max-width: 800px) {
+    .convert-wrapper {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .convert-pane {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

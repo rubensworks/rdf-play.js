@@ -3,7 +3,7 @@
 [![Build status](https://github.com/rubensworks/rdf-play.js/workflows/CI/badge.svg)](https://github.com/rubensworks/rdf-play.js/actions?query=workflow%3ACI)
 
 This is a Web-based tool for performing simple RDF operations,
-such as parsing, serializing and dereferencing from URLs.
+such as parsing, serializing, dereferencing from URLs, and converting between content types.
 
 **Live version: https://rdf-play.rubensworks.net/**
 
