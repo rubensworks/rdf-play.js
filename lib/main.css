@@ -75,7 +75,8 @@ h1 {
 }
 
 input,
-select {
+select,
+.convert-submit {
     padding: 1px 5px;
     font-size: 20pt;
 }
@@ -100,6 +101,7 @@ input.http-proxy {
 }
 
 input.submit,
+.convert-submit,
 button {
     font-weight: bold;
     color: black;
@@ -110,17 +112,19 @@ button {
     cursor: pointer;
 }
 
-input.submit {
+input.submit, .convert-submit {
     margin: 10px 0 0;
     width: 100%;
 }
 
 input.submit:hover,
+.convert-submit:hover,
 button:hover {
     background-color: #618a97;
 }
 
-input.submit:active {
+input.submit:active,
+.convert-submit:active{
     margin: 11px -1px -1px 1px;
 }
 
@@ -253,7 +257,8 @@ button.proxy-default {
         width: 100%;
     }
 
-    input.submit {
+    input.submit,
+    .convert-submit {
         margin: 10px 0 0;
         width: 100%;
     }
@@ -368,15 +373,6 @@ button.proxy-default {
     width: 100%;
     padding: 1px 5px;
     font-size: 16pt;
-}
-
-.convert-submit {
-    font-size: 1.5em;
-    margin-top: 10px;
-}
-
-.convert-submit:active {
-    margin: 11px -1px -1px 1px;
 }
 
 @media (max-width: 800px) {
