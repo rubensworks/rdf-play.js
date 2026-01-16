@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head prefix="foaf: http://xmlns.com/foaf/0.1/ og: http://ogp.me/ns#">
     <meta charset="UTF-8">
     <title>RDF Play</title>
@@ -20,75 +21,123 @@
     <meta name="twitter:title" content="RDF Play" />
     <meta name="twitter:description" content="A Web-based tool for performing simple client-side RDF operations." />
 </head>
+
 <body>
-<section class="main-wrapper">
-<section class="main">
-    <h1>RDF Play</h1>
-    <form class="query">
-        <input class="field-url" type="text" placeholder="https://example.org/" />
-        <span class="details-toggle" title="Settings"></span>
-        <div class="details">
-            <strong class="details-label">Result format</strong>
-            <select class="result-media-type">
-                <option value="application/trig">application/trig</option>
-            </select>
-            <br />
-            <strong class="details-label">HTTP Proxy</strong>
-            <input class="http-proxy" type="text" placeholder="https://proxy.example.org/" />
-            <button class="proxy-default">Set default</button>
+    <section class="main-wrapper">
+        <section class="main">
+            <h1>RDF Play</h1>
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="tab-dereference" title="Dereference">Dereference</button>
+                <button class="tab-btn" data-tab="tab-convert" title="Convert">Convert</button>
+            </div>
+
+            <div id="tab-dereference" class="tab-content active">
+                <form class="query">
+                    <input class="field-url" type="text" placeholder="https://example.org/" />
+                    <span class="details-toggle" title="Settings"></span>
+                    <div class="details">
+                        <strong class="details-label">Result format</strong>
+                        <select class="result-media-type">
+                            <option value="application/trig">application/trig</option>
+                        </select>
+                        <br />
+                        <strong class="details-label">HTTP Proxy</strong>
+                        <input class="http-proxy" type="text" placeholder="https://proxy.example.org/" />
+                        <button class="proxy-default">Set default</button>
+                    </div>
+                    <input class="submit" type="submit" value="Get RDF" />
+                </form>
+                <div class="output-error" style="display: none">
+                    An error occurred...
+                </div>
+                <div class="output" style="display: none">
+                    <div class="metadata">
+                        <strong>RDF Quads</strong>: <span class="output-counter"></span>
+                        <button class="convert-from-dereference clipboard">Convert</button>
+                        <button class="clipboard">Copy to Clipboard</button>
+                    </div>
+                    <table class="serialized">
+                        <tr class="row-result-dummy"></tr>
+                    </table>
+                    <table class="quads" style="display: none">
+                        <tr class="head">
+                            <td>Subject</td>
+                            <td>Predicate</td>
+                            <td>Object</td>
+                            <td>Graph</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-convert" class="tab-content">
+                <div class="query">
+                    <div class="convert-wrapper">
+                        <div class="convert-pane">
+                            <div class="convert-header">
+                                <select class="convert-input-type">
+                                    <option value="text/turtle">text/turtle</option>
+                                </select>
+                            </div>
+                            <textarea class="convert-input" placeholder="Input RDF..."></textarea>
+                        </div>
+                        <div class="convert-pane">
+                            <div class="convert-header">
+                                <select class="convert-output-type">
+                                    <option value="application/trig">application/trig</option>
+                                </select>
+                            </div>
+                            <textarea class="convert-output" readonly placeholder="Output RDF..."></textarea>
+                            <button class="convert-clipboard clipboard" style="float: right; margin-top: 5px;">Copy to
+                                Clipboard</button>
+                        </div>
+                    </div>
+                    <button class="convert-submit">Convert RDF</button>
+                </div>
+                <div class="convert-error output-error" style="display: none"></div>
+            </div>
+        </section>
+    </section>
+    <footer>
+        <div class="wrapper">
+            <h2 class="footer-heading">RDF Play</h2>
+
+            <p>
+                This is a Web-based tool for performing simple client-side RDF operations.
+                None of the data entered into this application leaves your device.
+            </p>
+
+            <p>
+                Currently, dereferencing RDF by URL with different result formats is supported (defaults to TriG),
+                and RDF can be converted from a given format to another.
+            </p>
+
+            <p>
+                All major RDF 1.2 serializations are supported, such as Turtle, JSON-LD, RDFa in HTML, script data
+                blocks in HTML, ...
+                <br />
+                Internally, this tool makes use of RDF parsers from the <a
+                    href="https://github.com/comunica/comunica">Comunica framework</a>,
+                which enable streaming processing of RDF.
+            </p>
+
+            <p>
+                Want to run this from the command-line? Have a look at <a
+                    href="https://github.com/rubensworks/rdf-dereference.js/">rdf-dereference</a>, <a
+                    href="https://github.com/rubensworks/rdf-parse.js/">rdf-parse</a>, and <a
+                    href="https://github.com/rubensworks/rdf-serialize.js/">rdf-serialize</a>.
+            </p>
+
+            <p>
+                &#169; 2020 - now<br />
+                <a href="https://github.com/rubensworks/rdf-play.js/" class="source">Source code</a><br />
+                <a href="https://github.com/rubensworks/rdf-play.js/issues/">Found a bug or need a feature? Report it at
+                    the issue tracker</a>.
+            </p>
+
         </div>
-        <input class="submit" type="submit" value="Get RDF" />
-    </form>
-    <div class="output-error" style="display: none">
-        An error occurred...
-    </div>
-    <div class="output" style="display: none">
-        <div class="metadata">
-            <strong>RDF Quads</strong>: <span class="output-counter"></span>
-            <button class="clipboard">Copy to Clipboard</button>
-        </div>
-        <table class="serialized">
-            <tr class="row-result-dummy"></tr>
-        </table>
-        <table class="quads" style="display: none">
-            <tr class="head">
-                <td>Subject</td>
-                <td>Predicate</td>
-                <td>Object</td>
-                <td>Graph</td>
-            </tr>
-        </table>
-    </div>
-</section>
-</section>
-<footer>
-    <div class="wrapper">
-        <h2 class="footer-heading">RDF Play</h2>
-
-        <p>
-            This is a Web-based tool for performing simple client-side RDF operations.
-            Currently, dereferencing RDF by URL with different result formats is supported (defaults to TriG).
-        </p>
-
-        <p>
-            All major RDF 1.2 serializations are supported, such as Turtle, JSON-LD, RDFa in HTML, script data blocks in HTML, ...
-            <br />
-            Internally, this tool makes use of RDF parsers from the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
-            which enable streaming processing of RDF.
-        </p>
-
-        <p>
-            Want to run this from the command-line? Have a look at <a href="https://github.com/rubensworks/rdf-dereference.js/">rdf-dereference</a>, <a href="https://github.com/rubensworks/rdf-parse.js/">rdf-parse</a>, and <a href="https://github.com/rubensworks/rdf-serialize.js/">rdf-serialize</a>.
-        </p>
-
-        <p>
-            &#169; 2020 - now<br />
-            <a href="https://github.com/rubensworks/rdf-play.js/" class="source">Source code</a><br />
-            <a href="https://github.com/rubensworks/rdf-play.js/issues/">Found a bug or need a feature? Report it at the issue tracker</a>.
-        </p>
-
-    </div>
-</footer>
-<script src="scripts/main.min.js"></script>
+    </footer>
+    <script src="scripts/main.min.js"></script>
 </body>
+
 </html>
