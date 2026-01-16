@@ -1,7 +1,9 @@
-var path = require('path');
-var webpack = require('webpack');
-var TerserPlugin = require('terser-webpack-plugin');
+// eslint-disable-next-line import/no-nodejs-modules
+const path = require('node:path');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const TerserPlugin = require('terser-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = [
   {
@@ -20,31 +22,31 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
+          test: /\.tsx?$/u,
           use: 'ts-loader',
-          exclude: /node_modules/,
+          exclude: /node_modules/u,
         },
         {
           type: 'javascript/auto',
-          test: /\.(html)$/,
+          test: /\.(html)$/u,
           use: [
-            { loader: 'file-loader', options: { name: '[name].[ext]' } },
+            { loader: 'file-loader', options: { name: '[name].[ext]' }},
           ],
         },
         {
-          test: /\.(jpg|png|gif|svg|ico)$/,
+          test: /\.(jpg|png|gif|svg|ico)$/u,
           use: [
-            { loader: 'file-loader', options: { name: 'images/[name].[ext]' } },
+            { loader: 'file-loader', options: { name: 'images/[name].[ext]' }},
           ],
         },
         {
-          test: /\.css$/,
+          test: /\.css$/u,
           use: [
-            { loader: 'file-loader', options: { name: 'styles/[name].[ext]' } },
+            { loader: 'file-loader', options: { name: 'styles/[name].[ext]' }},
           ],
         },
         {
-          test: /images\/*\.svg$/,
+          test: /images\/*\.svg$/u,
           use: 'file-loader',
         },
 
@@ -54,7 +56,7 @@ module.exports = [
       extensions: [ '.tsx', '.ts', '.js' ],
     },
     plugins: [
-      new NodePolyfillPlugin()
+      new NodePolyfillPlugin(),
     ],
   },
   {
@@ -65,14 +67,15 @@ module.exports = [
     output: {
       filename: 'scripts/worker.min.js',
       path: path.join(__dirname, '/build'),
-      libraryTarget: 'this', // Fixes hot loading of web worker not working in Webpack
+      // Fixes hot loading of web worker not working in Webpack
+      libraryTarget: 'this',
     },
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
+          test: /\.tsx?$/u,
           use: 'ts-loader',
-          exclude: /node_modules/,
+          exclude: /node_modules/u,
         },
       ],
     },
@@ -81,7 +84,8 @@ module.exports = [
     },
     plugins: [
       new webpack.ProgressPlugin(),
-      new NodePolyfillPlugin({ excludeAliases: ['console'] }), // Fix for circular dependency: https://github.com/Richienb/node-polyfill-webpack-plugin/issues/18
+      // Fix for circular dependency: https://github.com/Richienb/node-polyfill-webpack-plugin/issues/18
+      new NodePolyfillPlugin({ excludeAliases: [ 'console' ]}),
     ],
     optimization: {
       minimizer: [
@@ -89,9 +93,13 @@ module.exports = [
           parallel: true,
           terserOptions: {
             safari10: true,
-          }
+          },
         }),
       ],
-    }
+    },
+    performance: {
+      maxAssetSize: 1_190_000,
+      maxEntrypointSize: 1_190_000,
+    },
   },
 ];

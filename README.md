@@ -27,7 +27,7 @@ The following RDF serializations are supported:
 | [SHACL Compact Syntax](https://w3c.github.io/shacl/shacl-compact-syntax/)                                                                                                                | `text/shaclc` | `.shaclc`, `.shc` |
 | [Extended SHACL Compact Syntax](https://github.com/jeswr/shaclcjs#extended-shacl-compact-syntax)                                                                                         | `text/shaclc-ext` | `.shaclce`, `.shce` |
 
-*When parsing HTML, script data blocks will also be detected. If they contain RDF, they will also be parsed with the appropriate parsers.* 
+*When parsing HTML, script data blocks will also be detected. If they contain RDF, they will also be parsed with the appropriate parsers.*
 
 ## License
 This software is written by [Ruben Taelman](http://rubensworks.net/).

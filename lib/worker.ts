@@ -1,22 +1,31 @@
-import * as ActorHttpProxy from "@comunica/actor-http-proxy";
-import {rdfDereferencer} from "rdf-dereference";
-import * as RDF from "@rdfjs/types";
-import {quadToStringQuad} from "rdf-string";
+import * as ActorHttpProxy from '@comunica/actor-http-proxy';
+import type * as RDF from '@rdfjs/types';
+import { rdfDereferencer } from 'rdf-dereference';
+import type { IDereferenceOptions } from 'rdf-dereference/lib/RdfDereferencerBase';
+import { quadToStringQuad } from 'rdf-string';
 
-self.onmessage = (m: any) => {
-  const config: any = {};
+globalThis.onmessage = async(m: any) => {
+  const config: IDereferenceOptions = {};
   if (m.data.proxy) {
-    config['@comunica/actor-http-proxy:httpProxyHandler'] = new (<any> ActorHttpProxy).ProxyHandlerStatic(m.data.proxy);
+    (<any> config)['@comunica/actor-http-proxy:httpProxyHandler'] =
+        new (<any> ActorHttpProxy).ProxyHandlerStatic(m.data.proxy);
   }
-  invoke(m.data.url, config,
-    (quad: RDF.Quad) => postMessage({ type: 'quad', quad: quadToStringQuad(quad) }, undefined),
-    (error: Error) => postMessage({ type: 'err', error: error.message }, undefined),
-    (counter: number, done: boolean) => postMessage({ type: 'counter', counter, done }, undefined),
+  await invoke(
+    <string> m.data.url,
+    config,
+    (quad: RDF.Quad) => postMessage({ type: 'quad', quad: quadToStringQuad(quad) }),
+    (error: Error) => postMessage({ type: 'err', error: error.message }),
+    (counter: number, done: boolean) => postMessage({ type: 'counter', counter, done }),
   );
 };
 
-async function invoke(url: string, config: any, onQuad: (quad: RDF.Quad) => void, onError: (error: Error) => void,
-                      onCounterUpdate: (counter: number, done: boolean) => void) {
+async function invoke(
+  url: string,
+  config: IDereferenceOptions,
+  onQuad: (quad: RDF.Quad) => void,
+  onError: (error: Error) => void,
+  onCounterUpdate: (counter: number, done: boolean) => void,
+): Promise<void> {
   try {
     const { data } = await rdfDereferencer.dereference(url, config);
     let counter = 0;
@@ -30,6 +39,6 @@ async function invoke(url: string, config: any, onQuad: (quad: RDF.Quad) => void
         onCounterUpdate(counter, true);
       });
   } catch (e) {
-    onError(e);
+    onError(<Error> e);
   }
 }

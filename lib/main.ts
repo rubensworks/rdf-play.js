@@ -1,16 +1,22 @@
-import {StreamWriter} from "n3";
-import * as RDF from "@rdfjs/types";
-import {stringQuadToQuad} from "rdf-string";
+import type * as RDF from '@rdfjs/types';
+import { StreamWriter } from 'n3';
+import type { IStringQuad } from 'rdf-string';
+import { stringQuadToQuad } from 'rdf-string';
 
-function invoke(url: string, proxy: string, onQuad: (quad: RDF.Quad) => void, onError: (error: string) => void,
-                onCounterUpdate: (counter: number, done: boolean) => void): Worker {
+function invoke(
+  url: string,
+  proxy: string,
+  onQuad: (quad: RDF.Quad) => void,
+  onError: (error: string) => void,
+  onCounterUpdate: (counter: number, done: boolean) => void,
+): Worker {
   const worker = new Worker('scripts/worker.min.js');
   worker.onmessage = (message) => {
     const data = message.data;
     switch (data.type) {
-    case 'quad':    return onQuad(stringQuadToQuad(data.quad));
-    case 'err':   return onError(data.error);
-    case 'counter': return onCounterUpdate(data.counter, data.done);
+      case 'quad': return onQuad(stringQuadToQuad(<IStringQuad> data.quad));
+      case 'err': return onError(<string> data.error);
+      case 'counter': return onCounterUpdate(<number> data.counter, <boolean> data.done);
     }
   };
   worker.onerror = (error: ErrorEvent) => onError(error.message);
@@ -20,23 +26,25 @@ function invoke(url: string, proxy: string, onQuad: (quad: RDF.Quad) => void, on
 
 function termToHtml(term: RDF.Term): string {
   switch (term.termType) {
-  case 'NamedNode':
-    return `<a href="${term.value}" target="_blank">${term.value}</a>`;
-  case 'BlankNode':
-    return `_:${term.value}`;
-  case 'Literal':
-    return term.value + ` <br /><em>(${term.datatype ? termToHtml(term.datatype) : term.language})</em>`;
-  default:
-    return term.value;
+    case 'NamedNode':
+      return `<a href="${term.value}" target="_blank">${term.value}</a>`;
+    case 'BlankNode':
+      return `_:${term.value}`;
+    case 'Literal':
+      return `${term.value} <br /><em>(${term.datatype ? termToHtml(term.datatype) : term.language})</em>`;
+    default:
+      return term.value;
   }
 }
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 function createTablePrinter(): (quad: RDF.Quad) => void {
-  const table: HTMLTableElement = document.querySelector('.output table.quads');
+  const table: HTMLTableElement = document.querySelector('.output table.quads')!;
 
   // Clear old results
-  table.querySelectorAll('.row-result')
-    .forEach((row) => row.parentNode.removeChild(row));
+  for (const row of table.querySelectorAll('.row-result')) {
+    row.parentNode!.removeChild(row);
+  }
 
   return (quad: RDF.Quad) => {
     const row = table.insertRow(1);
@@ -52,29 +60,30 @@ function createTablePrinter(): (quad: RDF.Quad) => void {
   };
 }
 
-function escapeHtml(unsafe: string) {
+function escapeHtml(unsafe: string): string {
   return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;")
-    .replace(/ /g, "&nbsp;");
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('\'', '&#039;')
+    .replaceAll(' ', '&nbsp;');
 }
 
 function createTrigPrinter(): (quad: RDF.Quad) => void {
-  const container: HTMLTableElement = document.querySelector('.output table.serialized');
+  const container: HTMLTableElement = document.querySelector('.output table.serialized')!;
 
   // Clear old results
-  container.querySelectorAll('.row-result')
-    .forEach((row) => row.parentNode.removeChild(row));
+  for (const row of container.querySelectorAll('.row-result')) {
+    row.parentNode!.removeChild(row);
+  }
 
   const writer = new StreamWriter({ format: 'trig' });
   let i = 0;
-  let lastElement: HTMLTableDataCellElement = null;
+  let lastElement: HTMLTableDataCellElement | undefined;
   writer.on('data', (text: string) => {
     lastRdf += text;
-    const lines = text.split(/\n/g);
+    const lines = text.split(/\n/gu);
     let first = true;
     for (const line of lines) {
       let element = lastElement;
@@ -94,7 +103,7 @@ function createTrigPrinter(): (quad: RDF.Quad) => void {
   };
 }
 
-function copyStringToClipboard(str: string) {
+function copyStringToClipboard(str: string): void {
   // Create new element
   const el: HTMLTextAreaElement = document.createElement('textarea');
   // Set value (string to be copied)
@@ -112,15 +121,16 @@ function copyStringToClipboard(str: string) {
 }
 
 let lastRdf: string;
-function init() {
-  let lastWorker: Worker = null;
+function init(): void {
+  let lastWorker: Worker | undefined;
 
   // Load URL state
-  const uiState = location.hash.substr(1).split('&').reduce((acc: any, item) => {
-    const keyvalue = item.match(/^([^=]+)=(.*)/);
+  const uiState = location.hash.slice(1).split('&').reduce((acc: any, item) => {
+    const keyvalue = /^([^=]+)=(.*)/u.exec(item);
     if (keyvalue) {
       acc[decodeURIComponent(keyvalue[1])] = decodeURIComponent(keyvalue[2]);
     }
+    // eslint-disable-next-line ts/no-unsafe-return
     return acc;
   }, {});
 
@@ -129,14 +139,14 @@ function init() {
   for (let i = 0; i < forms.length; i++) {
     const form = forms.item(i);
 
-    const httpProxyElement: HTMLInputElement = document.querySelector('.http-proxy');
+    const httpProxyElement: HTMLInputElement = document.querySelector('.http-proxy')!;
 
     form.addEventListener('submit', (event) => {
       lastRdf = '';
 
-      const outputElement: HTMLElement = document.querySelector('.output');
-      const counterElement: HTMLElement = document.querySelector('.output-counter');
-      const errorElement: HTMLElement = document.querySelector('.output-error');
+      const outputElement: HTMLElement = document.querySelector('.output')!;
+      const counterElement: HTMLElement = document.querySelector('.output-counter')!;
+      const errorElement: HTMLElement = document.querySelector('.output-error')!;
 
       // Hide error
       errorElement.style.display = 'none';
@@ -149,34 +159,37 @@ function init() {
 
       // Add new results
       const proxy = httpProxyElement.value;
-      lastWorker = invoke((<any> form.querySelector('.field-url')).value,
+      lastWorker = invoke(
+        form.querySelector<HTMLInputElement>('.field-url')!.value,
         proxy,
         createTrigPrinter(),
         (error) => {
           errorElement.style.display = 'block';
           errorElement.innerHTML = error;
-          if (error.indexOf('Error requesting') === 0 || error.indexOf('NetworkError when attempting to fetch resource') === 0) {
+          if (error.startsWith('Error requesting') ||
+            error.startsWith('NetworkError when attempting to fetch resource')) {
             errorElement.innerHTML += `<br /><em>This website may not have CORS enabled, try enabling a proxy in the settings (button next to input field).</em>`;
           }
         },
         (counter: number, done: boolean) => {
           counterElement.innerHTML = `${counter}${done ? '' : '...'}`;
-        });
+        },
+      );
 
       event.preventDefault();
       return false;
     }, true);
 
     // Copy clipboard listener
-    document.querySelector('.clipboard').addEventListener('click', () => {
+    document.querySelector('.clipboard')!.addEventListener('click', () => {
       copyStringToClipboard(lastRdf);
-      event.preventDefault();
+      event!.preventDefault();
       return false;
     });
 
     // Set up details toggling
-    const details: HTMLElement = document.querySelector('.details');
-    document.querySelector('.details-toggle').addEventListener('click', () => {
+    const details: HTMLElement = document.querySelector('.details')!;
+    document.querySelector('.details-toggle')!.addEventListener('click', () => {
       if (details.style.display === 'block') {
         details.style.display = 'none';
       } else {
@@ -185,30 +198,29 @@ function init() {
     });
 
     // Set default proxy
-    document.querySelector('.proxy-default').addEventListener('click', () => {
+    document.querySelector('.proxy-default')!.addEventListener('click', () => {
       httpProxyElement.value = 'https://proxy.linkeddatafragments.org/';
       inputChangeListener();
-      event.preventDefault();
+      event!.preventDefault();
     });
 
     // URL state
-    const fieldUrl: HTMLInputElement = form.querySelector('.field-url');
+    const fieldUrl: HTMLInputElement = form.querySelector('.field-url')!;
     if (uiState.url) {
-      fieldUrl.value = uiState.url;
+      (<any> fieldUrl).value = uiState.url;
     }
     if (uiState.proxy) {
-      httpProxyElement.value = uiState.proxy;
+      (<any> httpProxyElement).value = uiState.proxy;
     }
-    const inputChangeListener = () => {
+    const inputChangeListener = (): void => {
       const queryString: string[] = [];
       if (fieldUrl.value) {
-        queryString.push('url=' + encodeURIComponent(fieldUrl.value));
+        queryString.push(`url=${encodeURIComponent(fieldUrl.value)}`);
       }
       if (httpProxyElement.value) {
-        queryString.push('proxy=' + encodeURIComponent(httpProxyElement.value));
+        queryString.push(`proxy=${encodeURIComponent(httpProxyElement.value)}`);
       }
-      history.replaceState(null, null, location.href.replace(/(?:#.*)?$/,
-        queryString.length ? '#' + queryString.join('&') : ''));
+      history.replaceState(null, '', location.href.replace(/(?:#.*)?$/u, queryString.length > 0 ? `#${queryString.join('&')}` : ''));
     };
     fieldUrl.addEventListener('input', inputChangeListener);
     httpProxyElement.addEventListener('input', inputChangeListener);

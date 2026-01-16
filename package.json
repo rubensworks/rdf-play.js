@@ -1,7 +1,20 @@
 {
   "name": "rdf-play",
   "version": "1.0.0",
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "description": "Client-side playground for RDF",
+  "typings": "index",
+  "author": "Ruben Taelman <rubensworks@gmail.com>",
+  "license": "MIT",
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/rubensworks/"
+  },
+  "homepage": "https://github.com/rubensworks/rdf-play.js#readme",
+  "repository": "git@github.com:rubensworks/rdf-play.js.git",
+  "bugs": {
+    "url": "https://github.com/rubensworks/rdf-play.js/issues"
+  },
   "keywords": [
     "rdf",
     "parse",
@@ -13,40 +26,15 @@
     "dereference"
   ],
   "main": "index.js",
-  "typings": "index",
-  "repository": "git@github.com:rubensworks/rdf-play.js.git",
-  "author": "Ruben Taelman <rubensworks@gmail.com>",
-  "funding": {
-    "type": "individual",
-    "url": "https://github.com/sponsors/rubensworks/"
-  },
-  "bugs": {
-    "url": "https://github.com/rubensworks/rdf-play.js/issues"
-  },
-  "homepage": "https://github.com/rubensworks/rdf-play.js#readme",
-  "license": "MIT",
   "files": [
-    "lib/**/*.ts",
     "lib/**/*.css",
     "lib/**/*.html",
-    "lib/**/*.svg"
+    "lib/**/*.svg",
+    "lib/**/*.ts"
   ],
   "pre-commit": [
     "lint"
   ],
-  "devDependencies": {
-    "file-loader": "^6.2.0",
-    "manual-git-changelog": "^1.0.1",
-    "node-polyfill-webpack-plugin": "^4.0.0",
-    "pre-commit": "^1.2.2",
-    "ts-loader": "^9.5.1",
-    "tslint": "^6.0.0",
-    "tslint-eslint-rules": "^5.3.1",
-    "typescript": "^5.6.3",
-    "webpack": "^5.95.0",
-    "webpack-cli": "^6.0.0",
-    "webpack-dev-server": "^5.1.0"
-  },
   "jest": {
     "globals": {
       "ts-jest": {
@@ -71,7 +59,7 @@
     "test": "jest ${1}",
     "test-watch": "jest ${1} --watch",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
-    "lint": "tslint index.ts lib/**/*.ts test/**/*.ts --exclude '**/*.d.ts'",
+    "lint": "eslint . --cache",
     "build": "webpack serve --config webpack.config.js --mode development",
     "validate": "npm ls",
     "version": "manual-git-changelog onversion",
@@ -81,10 +69,22 @@
   "dependencies": {
     "@comunica/actor-http-proxy": "^5.0.0",
     "@rdfjs/types": "*",
-    "n3": "^2.0.0",
     "@types/n3": "^1.26.1",
+    "n3": "^2.0.0",
     "rdf-dereference": "^5.0.0",
     "rdf-string": "^2.0.1"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "devDependencies": {
+    "@rubensworks/eslint-config": "^3.1.0",
+    "eslint": "^8.57.0",
+    "file-loader": "^6.2.0",
+    "manual-git-changelog": "^1.0.1",
+    "node-polyfill-webpack-plugin": "^4.0.0",
+    "pre-commit": "^1.2.2",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.9.3",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^6.0.0",
+    "webpack-dev-server": "^5.1.0"
+  }
 }

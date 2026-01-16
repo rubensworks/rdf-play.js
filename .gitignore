@@ -20,3 +20,5 @@ yarn-error.log
 coverage
 documentation
 engine-default.js
+.eslintcache
+build/
