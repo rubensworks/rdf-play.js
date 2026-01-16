@@ -28,7 +28,12 @@
         <input class="field-url" type="text" placeholder="https://example.org/" />
         <span class="details-toggle" title="Settings"></span>
         <div class="details">
-            <strong>HTTP Proxy</strong>:
+            <strong class="details-label">Result format</strong>
+            <select class="result-media-type">
+                <option value="application/trig">application/trig</option>
+            </select>
+            <br />
+            <strong class="details-label">HTTP Proxy</strong>
             <input class="http-proxy" type="text" placeholder="https://proxy.example.org/" />
             <button class="proxy-default">Set default</button>
         </div>
@@ -62,18 +67,18 @@
 
         <p>
             This is a Web-based tool for performing simple client-side RDF operations.
-            Currently, dereferencing RDF by URL with TriG output is supported.
+            Currently, dereferencing RDF by URL with different result formats is supported (defaults to TriG).
         </p>
 
         <p>
-            All major RDF serializations are supported, such as Turtle, JSON-LD, RDFa in HTML, script data blocks in HTML, ...
+            All major RDF 1.2 serializations are supported, such as Turtle, JSON-LD, RDFa in HTML, script data blocks in HTML, ...
             <br />
             Internally, this tool makes use of RDF parsers from the <a href="https://github.com/comunica/comunica">Comunica framework</a>,
             which enable streaming processing of RDF.
         </p>
 
         <p>
-            Want to run this from the command-line? Have a look at <a href="https://github.com/rubensworks/rdf-dereference.js/">rdf-dereference</a>.
+            Want to run this from the command-line? Have a look at <a href="https://github.com/rubensworks/rdf-dereference.js/">rdf-dereference</a>, <a href="https://github.com/rubensworks/rdf-parse.js/">rdf-parse</a>, and <a href="https://github.com/rubensworks/rdf-serialize.js/">rdf-serialize</a>.
         </p>
 
         <p>

@@ -58,6 +58,10 @@ module.exports = [
     plugins: [
       new NodePolyfillPlugin(),
     ],
+    performance: {
+      maxAssetSize: 1_190_000,
+      maxEntrypointSize: 1_190_000,
+    },
   },
   {
     entry: [

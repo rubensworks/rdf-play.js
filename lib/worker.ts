@@ -13,7 +13,7 @@ globalThis.onmessage = async(m: any) => {
   await invoke(
     <string> m.data.url,
     config,
-    (quad: RDF.Quad) => postMessage({ type: 'quad', quad: quadToStringQuad(quad) }),
+    (quad: RDF.Quad | undefined) => postMessage({ type: 'quad', quad: quad ? quadToStringQuad(quad) : undefined }),
     (error: Error) => postMessage({ type: 'err', error: error.message }),
     (counter: number, done: boolean) => postMessage({ type: 'counter', counter, done }),
   );
@@ -22,7 +22,7 @@ globalThis.onmessage = async(m: any) => {
 async function invoke(
   url: string,
   config: IDereferenceOptions,
-  onQuad: (quad: RDF.Quad) => void,
+  onQuad: (quad: RDF.Quad | undefined) => void,
   onError: (error: Error) => void,
   onCounterUpdate: (counter: number, done: boolean) => void,
 ): Promise<void> {
@@ -37,6 +37,8 @@ async function invoke(
       .on('error', onError)
       .on('end', () => {
         onCounterUpdate(counter, true);
+        // eslint-disable-next-line unicorn/no-useless-undefined
+        onQuad(undefined);
       });
   } catch (e) {
     onError(<Error> e);

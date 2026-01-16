@@ -1,12 +1,13 @@
 import type * as RDF from '@rdfjs/types';
-import { StreamWriter } from 'n3';
+import { rdfSerializer } from 'rdf-serialize';
 import type { IStringQuad } from 'rdf-string';
 import { stringQuadToQuad } from 'rdf-string';
+import { Readable } from 'readable-stream';
 
 function invoke(
   url: string,
   proxy: string,
-  onQuad: (quad: RDF.Quad) => void,
+  onQuad: (quad: RDF.Quad | undefined) => void,
   onError: (error: string) => void,
   onCounterUpdate: (counter: number, done: boolean) => void,
 ): Worker {
@@ -14,7 +15,7 @@ function invoke(
   worker.onmessage = (message) => {
     const data = message.data;
     switch (data.type) {
-      case 'quad': return onQuad(stringQuadToQuad(<IStringQuad> data.quad));
+      case 'quad': return onQuad(data.quad ? stringQuadToQuad<RDF.Quad>(<IStringQuad> data.quad) : undefined);
       case 'err': return onError(<string> data.error);
       case 'counter': return onCounterUpdate(<number> data.counter, <boolean> data.done);
     }
@@ -70,7 +71,7 @@ function escapeHtml(unsafe: string): string {
     .replaceAll(' ', '&nbsp;');
 }
 
-function createTrigPrinter(): (quad: RDF.Quad) => void {
+function createTrigPrinter(contentType: string): (quad: RDF.Quad | undefined) => void {
   const container: HTMLTableElement = document.querySelector('.output table.serialized')!;
 
   // Clear old results
@@ -78,7 +79,9 @@ function createTrigPrinter(): (quad: RDF.Quad) => void {
     row.parentNode!.removeChild(row);
   }
 
-  const writer = new StreamWriter({ format: 'trig' });
+  const readable = new Readable({ objectMode: true });
+  readable._read = () => {};
+  const writer = rdfSerializer.serialize(readable, { contentType });
   let i = 0;
   let lastElement: HTMLTableDataCellElement | undefined;
   writer.on('data', (text: string) => {
@@ -98,8 +101,12 @@ function createTrigPrinter(): (quad: RDF.Quad) => void {
     }
   });
 
-  return (quad: RDF.Quad) => {
-    writer.write(<any> quad);
+  return (quad: RDF.Quad | undefined) => {
+    if (quad) {
+      readable.push(quad);
+    } else {
+      readable.push(null);
+    }
   };
 }
 
@@ -139,6 +146,7 @@ function init(): void {
   for (let i = 0; i < forms.length; i++) {
     const form = forms.item(i);
 
+    const resultMediaTypeElement: HTMLSelectElement = document.querySelector('.result-media-type')!;
     const httpProxyElement: HTMLInputElement = document.querySelector('.http-proxy')!;
 
     form.addEventListener('submit', (event) => {
@@ -162,7 +170,7 @@ function init(): void {
       lastWorker = invoke(
         form.querySelector<HTMLInputElement>('.field-url')!.value,
         proxy,
-        createTrigPrinter(),
+        createTrigPrinter(resultMediaTypeElement.value),
         (error) => {
           errorElement.style.display = 'block';
           errorElement.innerHTML = error;
@@ -179,6 +187,28 @@ function init(): void {
       event.preventDefault();
       return false;
     }, true);
+
+    // Populate available content types
+    // eslint-disable-next-line ts/no-floating-promises
+    rdfSerializer.getContentTypesPrioritized()
+      .then((contentTypes) => {
+        // Remove old options
+        const oldSelectedValue = resultMediaTypeElement.value;
+        while (resultMediaTypeElement.options.length > 0) {
+          resultMediaTypeElement.remove(resultMediaTypeElement.options.length - 1);
+        }
+
+        // Add new options
+        for (const entry of Object.entries(contentTypes).sort((e1, e2) => e2[1] - e1[1])) {
+          const opt = document.createElement('option');
+          if (entry[0] === oldSelectedValue) {
+            opt.defaultSelected = true;
+          }
+          opt.text = entry[0];
+          opt.value = entry[0];
+          resultMediaTypeElement.add(opt, null);
+        }
+      });
 
     // Copy clipboard listener
     document.querySelector('.clipboard')!.addEventListener('click', () => {
@@ -209,6 +239,9 @@ function init(): void {
     if (uiState.url) {
       (<any> fieldUrl).value = uiState.url;
     }
+    if (uiState.resultMediaType) {
+      (<any> resultMediaTypeElement).value = uiState.resultMediaType;
+    }
     if (uiState.proxy) {
       (<any> httpProxyElement).value = uiState.proxy;
     }
@@ -217,12 +250,16 @@ function init(): void {
       if (fieldUrl.value) {
         queryString.push(`url=${encodeURIComponent(fieldUrl.value)}`);
       }
+      if (resultMediaTypeElement.value !== 'application/trig') {
+        queryString.push(`resultMediaType=${encodeURIComponent(resultMediaTypeElement.value)}`);
+      }
       if (httpProxyElement.value) {
         queryString.push(`proxy=${encodeURIComponent(httpProxyElement.value)}`);
       }
       history.replaceState(null, '', location.href.replace(/(?:#.*)?$/u, queryString.length > 0 ? `#${queryString.join('&')}` : ''));
     };
     fieldUrl.addEventListener('input', inputChangeListener);
+    resultMediaTypeElement.addEventListener('input', inputChangeListener);
     httpProxyElement.addEventListener('input', inputChangeListener);
   }
 }

@@ -69,10 +69,10 @@
   "dependencies": {
     "@comunica/actor-http-proxy": "^5.0.0",
     "@rdfjs/types": "*",
-    "@types/n3": "^1.26.1",
-    "n3": "^2.0.0",
     "rdf-dereference": "^5.0.0",
-    "rdf-string": "^2.0.1"
+    "rdf-serialize": "^5.0.0",
+    "rdf-string": "^2.0.1",
+    "readable-stream": "^4.7.0"
   },
   "devDependencies": {
     "@rubensworks/eslint-config": "^3.1.0",
