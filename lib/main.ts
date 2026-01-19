@@ -393,7 +393,10 @@ function init(): void {
       inputStream.push(convertInput.value);
       inputStream.push(null);
 
-      const quadStream = rdfParser.parse(inputStream, { contentType: convertInputType.value });
+      const quadStream = rdfParser.parse(inputStream, {
+        contentType: convertInputType.value,
+        baseIRI: window.location.origin + window.location.pathname,
+      });
       const prefixes: Record<string, string> = {};
       const quads: RDF.Quad[] = [];
 
