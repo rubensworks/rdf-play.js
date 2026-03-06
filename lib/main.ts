@@ -450,7 +450,10 @@ function init(): void {
     convertOutputType.addEventListener('input', updateUrl);
 
     // Reuse updateUrl for dereference inputs
-    fieldUrl.addEventListener('input', updateUrl);
+    fieldUrl.addEventListener('input', () => {
+      fieldUrl.value = fieldUrl.value.replace(/\s/gu, '');
+      updateUrl();
+    });
     resultMediaTypeElement.addEventListener('input', updateUrl);
     httpProxyElement.addEventListener('input', updateUrl);
   }
