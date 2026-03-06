@@ -5,13 +5,24 @@ import type { IDereferenceOptions } from 'rdf-dereference/lib/RdfDereferencerBas
 import { quadToStringQuad } from 'rdf-string';
 
 globalThis.onmessage = async(m: any) => {
+  // Verify validity of iri - required for consistent erroring when using proxy or not.
+  // If you would not verify this before,
+  // a uri like `https://exa  mple.com` would be iri encoded using proxy and error without
+  let url: string;
+  try {
+    url = new URL(<string> m.data.url).href;
+  } catch (e) {
+    postMessage({ type: 'err', error: (<Error>e).message });
+    return;
+  }
+
   const config: IDereferenceOptions = {};
   if (m.data.proxy) {
     (<any>config)['@comunica/actor-http-proxy:httpProxyHandler'] =
       new (<any>ActorHttpProxy).ProxyHandlerStatic(m.data.proxy);
   }
   await invoke(
-    <string>m.data.url,
+    url,
     config,
     (quad: RDF.Quad | undefined) => postMessage({ type: 'quad', quad: quad ? quadToStringQuad(quad) : undefined }),
     (error: Error) => postMessage({ type: 'err', error: error.message }),
