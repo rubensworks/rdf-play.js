@@ -166,18 +166,21 @@ function copyStringToClipboard(str: string): void {
 }
 
 let lastRdf: string;
-function init(): void {
-  let lastWorker: Worker | undefined;
-
-  // Load URL state
-  const uiState = location.hash.slice(1).split('&').reduce((acc: any, item) => {
+function parseHashFragment(hash: string): Record<string, string> {
+  return hash.slice(1).split('&').reduce((acc: Record<string, string>, item) => {
     const keyvalue = /^([^=]+)=(.*)/u.exec(item);
     if (keyvalue) {
       acc[decodeURIComponent(keyvalue[1])] = decodeURIComponent(keyvalue[2]);
     }
-    // eslint-disable-next-line ts/no-unsafe-return
     return acc;
   }, {});
+}
+
+function init(): void {
+  let lastWorker: Worker | undefined;
+
+  // Load URL state
+  const uiState = parseHashFragment(location.hash);
 
   // Init form(s)
   const forms = document.querySelectorAll('form.query');
@@ -300,6 +303,15 @@ function init(): void {
     if (uiState.proxy) {
       (<any>httpProxyElement).value = uiState.proxy;
     }
+
+    // Listen for hash changes triggered by IRI link clicks in the output
+    window.addEventListener('hashchange', () => {
+      const newState = parseHashFragment(location.hash);
+      if (newState.url) {
+        fieldUrl.value = newState.url;
+        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      }
+    });
 
     // Tab switching
     const tabs = document.querySelectorAll('.tab-btn');
