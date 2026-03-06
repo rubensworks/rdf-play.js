@@ -451,7 +451,7 @@ function init(): void {
 
     // Reuse updateUrl for dereference inputs
     fieldUrl.addEventListener('input', () => {
-      fieldUrl.value = fieldUrl.value.replace(/\s/gu, '');
+      fieldUrl.value = fieldUrl.value.trim();
       updateUrl();
     });
     resultMediaTypeElement.addEventListener('input', updateUrl);
