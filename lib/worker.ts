@@ -5,9 +5,9 @@ import type { IDereferenceOptions } from 'rdf-dereference/lib/RdfDereferencerBas
 import { quadToStringQuad } from 'rdf-string';
 
 globalThis.onmessage = async(m: any) => {
+  let url: string;
   try {
-    // eslint-disable-next-line no-new
-    new URL(m.data.url);
+    url = new URL(m.data.url).href;
   } catch (e) {
     postMessage({ type: 'err', error: (<Error>e).message });
     return;
@@ -19,7 +19,7 @@ globalThis.onmessage = async(m: any) => {
       new (<any>ActorHttpProxy).ProxyHandlerStatic(m.data.proxy);
   }
   await invoke(
-    <string>m.data.url,
+    url,
     config,
     (quad: RDF.Quad | undefined) => postMessage({ type: 'quad', quad: quad ? quadToStringQuad(quad) : undefined }),
     (error: Error) => postMessage({ type: 'err', error: error.message }),
