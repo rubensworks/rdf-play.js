@@ -180,7 +180,7 @@ function init(): void {
       const proxy = httpProxyElement.value;
       const printer = createTrigPrinter(resultMediaTypeElement.value);
       lastWorker = invoke(
-        form.querySelector<HTMLInputElement>('.field-url')!.value,
+        form.querySelector<HTMLInputElement>('.field-url')!.value.trim(),
         proxy,
         printer.onQuad,
         printer.onPrefix,
