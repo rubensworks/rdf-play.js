@@ -5,9 +5,12 @@ import type { IDereferenceOptions } from 'rdf-dereference/lib/RdfDereferencerBas
 import { quadToStringQuad } from 'rdf-string';
 
 globalThis.onmessage = async(m: any) => {
+  // Verify validity of iri - required for consistent erroring when using proxy or not.
+  // If you would not verify this before,
+  // a uri like `https://exa  mple.com` would be iri encoded using proxy and error without
   let url: string;
   try {
-    url = new URL(m.data.url).href;
+    url = new URL(<string> m.data.url).href;
   } catch (e) {
     postMessage({ type: 'err', error: (<Error>e).message });
     return;
