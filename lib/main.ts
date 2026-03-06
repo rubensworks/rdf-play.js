@@ -31,7 +31,7 @@ function invoke(
 function termToHtml(term: RDF.Term): string {
   switch (term.termType) {
     case 'NamedNode':
-      return `<a href="${term.value}" target="_blank">${term.value}</a>`;
+      return `<a href="#url=${encodeURIComponent(term.value)}">&lt;${escapeHtml(term.value)}&gt;</a>`;
     case 'BlankNode':
       return `_:${term.value}`;
     case 'Literal':
@@ -39,6 +39,33 @@ function termToHtml(term: RDF.Term): string {
     default:
       return term.value;
   }
+}
+
+function lineToHtml(line: string): string {
+  let result = '';
+  let i = 0;
+  while (i < line.length) {
+    const iriStart = line.indexOf('<', i);
+    if (iriStart === -1) {
+      result += escapeHtml(line.slice(i));
+      break;
+    }
+    result += escapeHtml(line.slice(i, iriStart));
+    const iriEnd = line.indexOf('>', iriStart);
+    if (iriEnd === -1) {
+      result += escapeHtml(line.slice(iriStart));
+      break;
+    }
+    const iri = line.slice(iriStart + 1, iriEnd);
+    // Only linkify if the content looks like a valid absolute IRI (has a scheme and no whitespace)
+    if (/^[a-zA-Z][a-zA-Z0-9+\-.]*:/u.test(iri) && !/\s/u.test(iri)) {
+      result += `<a href="#url=${encodeURIComponent(iri)}">&lt;${escapeHtml(iri)}&gt;</a>`;
+    } else {
+      result += escapeHtml(`<${iri}>`);
+    }
+    i = iriEnd + 1;
+  }
+  return result;
 }
 
 // eslint-disable-next-line unused-imports/no-unused-vars
@@ -102,7 +129,7 @@ function createTrigPrinter(contentType: string): {
         element = row.insertCell(0);
       }
       first = false;
-      element.innerHTML += escapeHtml(line);
+      element.innerHTML += lineToHtml(line);
       lastElement = element;
     }
   });
