@@ -5,6 +5,14 @@ import type { IDereferenceOptions } from 'rdf-dereference/lib/RdfDereferencerBas
 import { quadToStringQuad } from 'rdf-string';
 
 globalThis.onmessage = async(m: any) => {
+  try {
+    // eslint-disable-next-line no-new
+    new URL(m.data.url);
+  } catch (e) {
+    postMessage({ type: 'err', error: (<Error>e).message });
+    return;
+  }
+
   const config: IDereferenceOptions = {};
   if (m.data.proxy) {
     (<any>config)['@comunica/actor-http-proxy:httpProxyHandler'] =
