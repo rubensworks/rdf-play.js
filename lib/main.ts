@@ -31,28 +31,40 @@ function invoke(
 function termToHtml(term: RDF.Term): string {
   switch (term.termType) {
     case 'NamedNode':
-      return `<a href="#url=${encodeURIComponent(term.value)}">&lt;${escapeHtml(term.value)}&gt;</a>`;
+      return `
+        <a href="#url=${encodeURIComponent(term.value)}">
+            escapeHtml(term.value)}
+        </a>`;
     case 'BlankNode':
-      return `_:${term.value}`;
+      return `_:${escapeHtml(term.value)}`;
     case 'Literal':
-      return `${term.value} <br /><em>(${term.datatype ? termToHtml(term.datatype) : term.language})</em>`;
+      return `${escapeHtml(term.value)} <br /><em>(${term.datatype ? termToHtml(term.datatype) : escapeHtml(term.language)})</em>`;
     default:
-      return term.value;
+      return escapeHtml(term.value);
   }
 }
 
+/**
+ * This naive implementation uses the <> signature to mark IRIs.
+ * When the 'iri' is contained within a literal (e.g. `"<http://example.org>"`) it will still detect the IRI.
+ * A regex is used to verify if a supposed iri can be a valid one - causing triple terms not to be matched.
+ * @param line
+ */
 function lineToHtml(line: string): string {
   let result = '';
   let i = 0;
   while (i < line.length) {
     const iriStart = line.indexOf('<', i);
     if (iriStart === -1) {
+      // Commit everything, there are no IRIs left.
       result += escapeHtml(line.slice(i));
       break;
     }
+    // Commit everything up until the iri
     result += escapeHtml(line.slice(i, iriStart));
     const iriEnd = line.indexOf('>', iriStart);
     if (iriEnd === -1) {
+      // If the iri does not close, it was not an iri
       result += escapeHtml(line.slice(iriStart));
       break;
     }
@@ -168,9 +180,9 @@ function copyStringToClipboard(str: string): void {
 let lastRdf: string;
 function parseHashFragment(hash: string): Record<string, string> {
   return hash.slice(1).split('&').reduce((acc: Record<string, string>, item) => {
-    const keyvalue = /^([^=]+)=(.*)/u.exec(item);
-    if (keyvalue) {
-      acc[decodeURIComponent(keyvalue[1])] = decodeURIComponent(keyvalue[2]);
+    const splitIndex = item.indexOf('=');
+    if (splitIndex > 0 && splitIndex < item.length - 1) {
+      acc[decodeURIComponent(item.slice(0, splitIndex))] = decodeURIComponent(item.slice(splitIndex + 1));
     }
     return acc;
   }, {});
@@ -304,7 +316,8 @@ function init(): void {
       (<any>httpProxyElement).value = uiState.proxy;
     }
 
-    // Listen for hash changes triggered by IRI link clicks in the output
+    // Listen for hash changes triggered by IRI link clicks in the output (fragment identifier changed)
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event
     window.addEventListener('hashchange', () => {
       const newState = parseHashFragment(location.hash);
       if (newState.url) {
