@@ -56,10 +56,8 @@
     "testEnvironment": "node"
   },
   "scripts": {
-    "test": "jest ${1}",
-    "test-watch": "jest ${1} --watch",
-    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "lint": "eslint . --cache",
+    "clean": "git clean -fdx",
     "build": "webpack serve --config webpack.config.js --mode development",
     "validate": "npm ls",
     "version": "manual-git-changelog onversion",
