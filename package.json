@@ -79,7 +79,7 @@
     "file-loader": "^6.2.0",
     "manual-git-changelog": "^1.0.1",
     "node-polyfill-webpack-plugin": "^4.0.0",
-    "pre-commit": "^1.2.2",
+    "pre-commit": "^2.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.9.3",
     "webpack": "^5.95.0",
