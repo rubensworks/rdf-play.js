@@ -12,6 +12,8 @@ module.exports = [
       './lib/index.html',
       './lib/main.css',
       './lib/settings.svg',
+      './lib/rdf-play.svg',
+      './lib/rdf-play.png',
     ],
     devtool: 'cheap-module-source-map',
     output: {
