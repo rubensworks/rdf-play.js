@@ -49,6 +49,10 @@ footer a:hover {
 }
 
 h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     margin: 10px 0 20px;
     font-size: 75px;
     color: #331e38;
