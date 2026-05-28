@@ -59,6 +59,7 @@
     "lint": "eslint . --cache",
     "clean": "git clean -fdx",
     "build": "webpack serve --config webpack.config.js --mode development",
+    "watch": "webpack serve --config webpack.config.js --mode development --watch",
     "validate": "npm ls",
     "version": "manual-git-changelog onversion",
     "start": "webpack serve --config webpack.config.js --mode production",
